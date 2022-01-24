@@ -77,7 +77,14 @@ export function Layout(props: TypeLayoutProps) {
       <div className={getCls('left')} style={{width: parsePercents(leftSize)[0]}}>
         {left}
         {right && (
-          <div onMouseDown={onDragStart} className={getCls('split')}></div>
+          <div
+            className={getCls('split')}
+            onMouseDown={onDragStart}
+            onMouseUp={onDragEnd}
+            onDragOver={onDragEnd}
+          >
+            <div className={getCls('split-line')}></div>
+          </div>
         )}
       </div>
       {right && (
@@ -88,3 +95,5 @@ export function Layout(props: TypeLayoutProps) {
     </div>
   )
 }
+
+
