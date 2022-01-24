@@ -22,7 +22,7 @@ function getViteConfig() {
   const viteConfig = defineConfig({
     configFile: false,
     root: resolve(),
-    publicDir: resolve('example'),
+    publicDir: resolve('example', 'public'),
     server: {
       port: 8080,
       host: '127.0.0.1',

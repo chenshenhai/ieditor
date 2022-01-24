@@ -1,8 +1,9 @@
-@import './mod/text.less';
+@import './vars.less';
+@import './colors.less';
+@import './global.less';
+@import './mod/layout.less';
 
-.app {
-  background: #f8f8f8;
-  font-size: 40px;
-  font-weight: bolder;
-  color: #888888;
+.@{prefix}-container {
+  display: block;
+  box-shadow: 2px 2px 13px var(--ieditor-color-level-5);
 }
