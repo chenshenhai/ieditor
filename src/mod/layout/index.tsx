@@ -58,6 +58,11 @@ export function Layout(props: TypeLayoutProps) {
     const movePosition = e.pageX - prevDragPosition.current;
     const newLeftSize = leftSize + (movePosition / layoutWidth);
     prevDragPosition.current = e.pageX;
+
+    const leftWidth = newLeftSize * layoutWidth;
+    if (leftWidth < 100 || (layoutWidth - leftSize) < 100) {
+      return;
+    }
     setLeftSize(newLeftSize);
   }
 
