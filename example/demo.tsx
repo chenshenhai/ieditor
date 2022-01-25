@@ -25,7 +25,7 @@ ReactDOM.render(
     alignItems: 'center',
     paddingTop: 20,
   }}>
-    <IEditor width={800} height={400} value={value}/>
+    <IEditor width={800} height={400} defaultValue={value}/>
   </div>,
   document.querySelector('#app')
 )

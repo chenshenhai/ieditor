@@ -6,17 +6,18 @@ const NAME = 'edit';
 const getCls = createClassNameFunc(NAME);
 
 export type TypeLayoutProps = {
-  value?: string;
+  defaultValue?: string;
+  onChange?: (data: {value: string}) => void;
 }
 
 export function Edit(props: TypeLayoutProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const { value } = props;
+  const { defaultValue, onChange } = props;
   useEffect(() => {
     if (ref && ref.current) {
       
       const editor = CodeMirror(ref.current, {
-        value: value || '',
+        value: defaultValue || '',
         mode: 'markdown',
         readOnly: false,
         tabSize: 2,
@@ -28,12 +29,16 @@ export function Edit(props: TypeLayoutProps) {
         gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
       });
       editor.on('change', () => {
+        if (typeof onChange === 'function') {
+          const value = editor.getValue();
+          onChange({ value })
+        }
         // editor.getValue()
       })
-      // editor.setOption('mode', '');
-      // window.addEventListener('resize',() => {
-      //   editor.refresh()
-      // })
+      // // editor.setOption('mode', '');
+      // // window.addEventListener('resize',() => {
+      // //   editor.refresh()
+      // // })
     }
     
   }, []);

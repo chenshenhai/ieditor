@@ -20,7 +20,7 @@ function parsePercents(num?: number): string[] {
     _num = num;
   } 
   const leftPercent = (_num * 100).toFixed(0);
-  const rightPercent = (100 - _num).toFixed(0);
+  const rightPercent = (100 - _num * 100).toFixed(0);
   return [
     `${leftPercent}%`,
     `${rightPercent}%`
@@ -91,7 +91,7 @@ export function Layout(props: TypeLayoutProps) {
         )}
       </div>
       {right && (
-        <div className={getCls('right')} >
+        <div className={getCls('right')} style={{width: parsePercents(leftSize)[1]}}>
           {right}
         </div>)
       }

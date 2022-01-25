@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
-import { Layout } from './mod/layout';
-import { Edit } from './mod/edit';
-import { Preview } from './mod/preview';
+import { Layout } from './mods/layout';
+import { Edit } from './mods/edit';
+import { Preview } from './mods/preview';
 import { createClassName } from './util/name';
 const NAME = 'container';
 
@@ -11,11 +11,12 @@ export type TypeIEditorProps = {
   style?: React.CSSProperties;
   width?: number | string;
   height?: number | string;
-  value?: string;
+  defaultValue?: string;
 }
 
 function IEditor(props: TypeIEditorProps) {
-  const { width, height, className, style = {}, value } = props;
+  const { width, height, className, style = {}, defaultValue = '' } = props;
+  const [markdown, setMarkdown] = useState<string>(defaultValue);
   return (
     <div
       className={classNames(
@@ -27,9 +28,15 @@ function IEditor(props: TypeIEditorProps) {
       }}
     >
       <Layout
-        left={<Edit value={value} />}
+        left={<Edit
+            defaultValue={defaultValue}
+            onChange={(data) => {
+              const { value } = data;
+              setMarkdown(value)
+            }}
+          />}
         leftSize={0.5}
-        right={<Preview />}
+        right={<Preview markdown={markdown} />}
       />
     </div>
   )
