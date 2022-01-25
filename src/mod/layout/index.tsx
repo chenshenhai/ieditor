@@ -82,6 +82,9 @@ export function Layout(props: TypeLayoutProps) {
             onMouseDown={onDragStart}
             onMouseUp={onDragEnd}
             onDragOver={onDragEnd}
+            onDragStart={(e) => {
+              e.preventDefault();
+            }}
           >
             <div className={getCls('split-line')}></div>
           </div>

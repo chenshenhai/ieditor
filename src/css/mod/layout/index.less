@@ -1,17 +1,17 @@
-@mod-prefix: ~"@{prefix}-layout";
+@layout-prefix: ~"@{prefix}-layout";
 
-.@{mod-prefix}-container {
+.@{layout-prefix}-container {
   position: relative;
   display: flex;
   width: 100%;
   height: 100%;
 
-  .@{mod-prefix}-left {
+  .@{layout-prefix}-left {
     position: relative;
     display: flex;
     height: 100%;
 
-    .@{mod-prefix}-split {
+    .@{layout-prefix}-split {
       position: absolute;
       right: -4px;
       top: 0;
@@ -20,7 +20,7 @@
       cursor: ew-resize;
       z-index: 1;
     }
-    .@{mod-prefix}-split-line {
+    .@{layout-prefix}-split-line {
       position: absolute;
       left: 2px;
       top: 0;
@@ -31,7 +31,7 @@
     }
   }
 
-  .@{mod-prefix}-right {
+  .@{layout-prefix}-right {
     position: relative;
     height: 100%;
     display: flex;

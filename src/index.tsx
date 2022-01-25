@@ -11,10 +11,11 @@ export type TypeIEditorProps = {
   style?: React.CSSProperties;
   width?: number | string;
   height?: number | string;
+  value?: string;
 }
 
 function IEditor(props: TypeIEditorProps) {
-  const { width, height, className, style = {} } = props;
+  const { width, height, className, style = {}, value } = props;
   return (
     <div
       className={classNames(
@@ -26,7 +27,7 @@ function IEditor(props: TypeIEditorProps) {
       }}
     >
       <Layout
-        left={<Edit />}
+        left={<Edit value={value} />}
         leftSize={0.5}
         right={<Preview />}
       />

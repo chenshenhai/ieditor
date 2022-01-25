@@ -1,0 +1,18 @@
+@edit-prefix: ~"@{prefix}-edit";
+
+@import './codemirror.less';
+
+.@{edit-prefix}-container {
+
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  .CodeMirror {
+    font-family: 'Source Code Pro', monospace;
+    height: 100%;
+  }
+
+  
+}

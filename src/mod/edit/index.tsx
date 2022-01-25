@@ -1,21 +1,46 @@
-import React from 'react';
-import { createClassNameFunc } from '../../util/name'
+import React, { useEffect, useRef } from 'react';
+import { createClassNameFunc } from '../../util/name';
+import CodeMirror from './codemirror'
 
 const NAME = 'edit';
 const getCls = createClassNameFunc(NAME);
 
 export type TypeLayoutProps = {
-  content?: string;
+  value?: string;
 }
 
 export function Edit(props: TypeLayoutProps) {
-  const { content } = props;
+  const ref = useRef<HTMLDivElement>(null);
+  const { value } = props;
+  useEffect(() => {
+    if (ref && ref.current) {
+      
+      const editor = CodeMirror(ref.current, {
+        value: value || '',
+        mode: 'markdown',
+        readOnly: false,
+        tabSize: 2,
+        lineWrapping: true,
+        lineNumbers: true,
+        autoCloseBrackets: true,
+        autoCloseTags: true,
+        foldGutter: true,
+        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+      });
+      editor.on('change', () => {
+        // editor.getValue()
+      })
+      // editor.setOption('mode', '');
+      // window.addEventListener('resize',() => {
+      //   editor.refresh()
+      // })
+    }
+    
+  }, []);
+
   return (
     <div className={getCls('container')}>
-      <div>Edit</div>
-      <div>
-        {content}
-      </div>
+      <div className={getCls('main')} ref={ref}></div>
     </div>
   )
 }
