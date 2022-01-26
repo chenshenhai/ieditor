@@ -1,14 +1,10 @@
-import React, { useState, useRef } from 'react';
-import { createClassNameFunc } from '../../util/name'
+import React, { useState, useRef, useEffect } from 'react';
+import { createClassNameFunc } from '../../util/name';
 
 const NAME = 'layout';
 const getCls = createClassNameFunc(NAME);
 
-export type TypeLayoutProps = {
-  left: React.ReactNode;
-  right?: React.ReactNode;
-  leftSize?: number;
-}
+
 
 const defaultProp: Partial<TypeLayoutProps> = {
   // 
@@ -26,6 +22,13 @@ function parsePercents(num?: number): string[] {
     `${rightPercent}%`
   ]
 }
+
+export type TypeLayoutProps = {
+  left: React.ReactNode;
+  right?: React.ReactNode;
+  leftSize?: number;
+}
+
 
 export function Layout(props: TypeLayoutProps) {
   const { left, right } = {...defaultProp, ...props};
@@ -66,6 +69,11 @@ export function Layout(props: TypeLayoutProps) {
     setLeftSize(newLeftSize);
   }
 
+  useEffect(() => {
+    window.addEventListener('message', (data) => {
+      console.log('data =', data);
+    })
+  }, []);
 
   return (
     <div className={getCls('container')}

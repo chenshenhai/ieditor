@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
-import { Layout } from './mods/layout';
-import { Edit } from './mods/edit';
-import { Preview } from './mods/preview';
+import { Layout } from './modules/layout';
+import { Edit } from './modules/edit';
+import { Preview } from './modules/preview';
 import { createClassName } from './util/name';
 const NAME = 'container';
 
