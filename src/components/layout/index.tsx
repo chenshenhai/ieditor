@@ -6,8 +6,8 @@ const getCls = createClassNameFunc(NAME);
 
 
 
-const defaultProp: Partial<TypeLayoutProps> = {
-  // 
+const defaultProps = {
+  leftSize: 0.5
 }
 
 function parsePercents(num?: number): string[] {
@@ -31,8 +31,9 @@ export type TypeLayoutProps = {
 
 
 export function Layout(props: TypeLayoutProps) {
-  const { left, right } = {...defaultProp, ...props};
-  const [leftSize, setLeftSize] = useState<number>(0.5);
+  const _props = {...defaultProps, ...props};
+  const { left, right } = _props;
+  const [leftSize, setLeftSize] = useState<number>(_props.leftSize);
   const refLayout: React.LegacyRef<HTMLDivElement> = useRef(null)
   const isDragging = useRef<boolean>(false);
   const prevDragPosition = useRef<number>(-1);
