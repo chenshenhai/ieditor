@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createClassNameFunc } from '../../util/name';
 
-const NAME = 'layout';
+const NAME = 'split-layout';
 const getCls = createClassNameFunc(NAME);
 
 const defaultProps = {

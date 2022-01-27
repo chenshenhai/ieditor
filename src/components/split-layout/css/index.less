@@ -1,17 +1,17 @@
-@layout-prefix: ~"@{prefix}-layout";
+@split-layout-prefix: ~"@{prefix}-split-layout";
 
-.@{layout-prefix}-container {
+.@{split-layout-prefix}-container {
   position: relative;
   display: flex;
   width: 100%;
   height: 100%;
 
-  .@{layout-prefix}-left {
+  .@{split-layout-prefix}-left {
     position: relative;
     display: flex;
     height: 100%;
 
-    .@{layout-prefix}-split {
+    .@{split-layout-prefix}-split {
       position: absolute;
       right: -4px;
       top: 0;
@@ -20,7 +20,7 @@
       cursor: ew-resize;
       z-index: 1;
     }
-    .@{layout-prefix}-split-line {
+    .@{split-layout-prefix}-split-line {
       position: absolute;
       left: 2px;
       top: 0;
@@ -31,7 +31,7 @@
     }
   }
 
-  .@{layout-prefix}-right {
+  .@{split-layout-prefix}-right {
     position: relative;
     height: 100%;
     display: flex;

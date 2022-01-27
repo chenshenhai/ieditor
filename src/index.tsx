@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import classNames from 'classnames';
-import { Layout } from './components/split-layout';
-import { Edit } from './modules/edit';
-import { Preview } from './modules/preview';
 import { createClassName } from './util/name';
-const NAME = 'container';
+import { FlexRows } from './components/flex-rows';
+import { Content } from './modules/content';
+import { Header } from './modules/header';
+import { Footer } from './modules/footer';
+const NAME = 'content';
 
 export type TypeIEditorProps = {
   className?: string;
@@ -42,7 +43,6 @@ function getStyle(props: TypeIEditorProps): React.CSSProperties {
 
 function IEditor(props: TypeIEditorProps) {
   const { className, defaultValue = '' } = props;
-  const [markdown, setMarkdown] = useState<string>(defaultValue);
   return (
     <div
       className={classNames(
@@ -50,26 +50,20 @@ function IEditor(props: TypeIEditorProps) {
       )}
       style={getStyle(props)}
     >
-      <Layout 
-        left={
-          <div>List</div>
-        }
-        leftSize={0.2}
-        right={
-          <Layout
-            left={
-              <Edit
-                defaultValue={defaultValue}
-                onChange={(data) => {
-                  const { value } = data;
-                  setMarkdown(value)
-                }}
-              />
-            }
-            leftSize={0.5}
-            right={<Preview markdown={markdown} />}
-          />
-        }
+      <FlexRows
+        list={[
+          {
+            slot: (<Header />),
+            height: 40,
+          },
+          {
+            slot: (<Content defaultValue={defaultValue}/>)
+          },
+          {
+            slot: (<Footer />),
+            height: 40,
+          },
+        ]}
       />
       
     </div>
