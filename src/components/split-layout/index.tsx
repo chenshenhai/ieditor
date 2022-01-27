@@ -4,8 +4,6 @@ import { createClassNameFunc } from '../../util/name';
 const NAME = 'layout';
 const getCls = createClassNameFunc(NAME);
 
-
-
 const defaultProps = {
   leftSize: 0.5
 }

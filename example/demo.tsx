@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import IEditor from '../src/';
-import '../src/css/index';
+import '../src/index.less';
 
 const value = `
 # H1 Title
@@ -47,9 +47,10 @@ ReactDOM.render(
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 20,
+    // paddingTop: 20,
   }}>
-    <IEditor width={800} height={400} defaultValue={value}/>
+    {/* <IEditor width={800} height={400} defaultValue={value}/> */}
+    <IEditor width={800} height={400} fullScreen defaultValue={value}/>
   </div>,
   document.querySelector('#app')
 )

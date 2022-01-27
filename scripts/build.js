@@ -104,7 +104,7 @@ function buildTS() {
 }
 
 async function buildLess() {
-  const lessPath = resolve('src', 'css', 'index.less');
+  const lessPath = resolve('src', 'index.less');
   const lessInput = fs.readFileSync(lessPath, { encoding: 'utf8' })
   const { css } = await less.render(lessInput, {
     filename: lessPath,
@@ -112,10 +112,10 @@ async function buildLess() {
   write(resolve('dist', 'css', 'index.css'), css);
 
   const pattern = '**/*.less';
-  const cwd = resolve('src', 'css');
+  const cwd = resolve('src');
   const files = glob.sync(pattern, { cwd, });
   files.forEach((file) => {
-    const css = fs.readFileSync(resolve('src', 'css', file), { encoding: 'utf8' });
+    const css = fs.readFileSync(resolve('src', file), { encoding: 'utf8' });
     write(resolve('dist', 'css', file), css);
   });
 }
@@ -127,7 +127,7 @@ function resolve(...args) {
 function write(filePath, content) {
   const fileDir = path.dirname(filePath);
   if (!(fs.existsSync(fileDir) && fs.statSync(fileDir).isDirectory())) {
-    fs.mkdirSync(fileDir);
+    fs.mkdirSync(fileDir, { recursive: true });
   }
   fs.writeFileSync(filePath, content);
 }
