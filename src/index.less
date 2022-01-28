@@ -8,8 +8,18 @@
 @import './modules/header/css/index.less';
 @import './modules/footer/css/index.less';
 
-.@{prefix}-container {
+@wrapper-prefix: ~"@{prefix}-wrapper";
+
+.@{wrapper-prefix} {
   display: block;
   box-shadow: 2px 2px 13px var(--ieditor-color-level-5);
   background-color: var(--ieditor-bg-color);
+
+  .@{wrapper-prefix}-header {
+    box-shadow: 2px 2px 10px var(--ieditor-color-level-4);
+  }
+
+  .@{wrapper-prefix}-footer {
+    box-shadow: -2px -2px 10px var(--ieditor-color-level-4);
+  }
 }

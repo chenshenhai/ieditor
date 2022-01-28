@@ -8,10 +8,16 @@ export type TypeHeaderProps = {
   
 }
 
+export const headerHeight = 36;
+
 export function Header(props: TypeHeaderProps) {
 
   return (
-    <div className={getCls('container')}>
+    <div
+      className={getCls('container')}
+      style={{
+        height: headerHeight,
+      }}>
       Header
     </div>
   )

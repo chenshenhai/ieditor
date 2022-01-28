@@ -1,11 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
-import { createClassName } from './util/name';
+import { createClassName, createClassNameFunc } from './util/name';
 import { FlexRows } from './components/flex-rows';
 import { Content } from './modules/content';
-import { Header } from './modules/header';
-import { Footer } from './modules/footer';
-const NAME = 'content';
+import { Header, headerHeight } from './modules/header';
+import { Footer, footerHeight } from './modules/footer';
+const NAME = 'wrapper';
+
+const getCls = createClassNameFunc(NAME);
 
 export type TypeIEditorProps = {
   className?: string;
@@ -54,14 +56,16 @@ function IEditor(props: TypeIEditorProps) {
         list={[
           {
             slot: (<Header />),
-            height: 40,
+            height: headerHeight,
+            className: getCls('header'),
           },
           {
             slot: (<Content defaultValue={defaultValue}/>)
           },
           {
             slot: (<Footer />),
-            height: 40,
+            height: footerHeight,
+            className: getCls('footer'),
           },
         ]}
       />

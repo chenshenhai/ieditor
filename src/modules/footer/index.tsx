@@ -8,11 +8,17 @@ export type TypeFooterProps = {
   
 }
 
+export const footerHeight = 30;
 
 export function Footer(props: TypeFooterProps) {
 
   return (
-    <div className={getCls('container')}>
+    <div
+      className={getCls('container')}
+      style={{
+        height: footerHeight,
+      }}
+    >
       Footer
     </div>
   )
