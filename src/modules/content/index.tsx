@@ -17,7 +17,7 @@ export function Content(props: TypeIEditorProps) {
   return (
     <Layout 
       left={<Sider />}
-      leftSize={0.2}
+      leftSize={0.16}
       right={
         <Layout
           left={

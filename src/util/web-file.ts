@@ -1,15 +1,23 @@
 
 type WebFile = {
   initialized: boolean,
-  handle: FileSystemDirectoryHandle | FileSystemFileHandle,
-  content?: FileReader;
-  children?: WebFile[]
-}
+  type: 'file' | 'directory',
+  origin: 'FileSystemAccess',
+  content?: string | ArrayBuffer | null,
+  fileType?: string,
+  children?: WebFile[],
 
+  handle?: FileSystemDirectoryHandle | FileSystemFileHandle,
+}
 
 export async function openFile(): Promise<WebFile> {
   const [ handle ] = await window.showOpenFilePicker();
-  const webFile = await parseWebFile({ handle, initialized: false });
+  const webFile = await parseWebFile({
+    origin: 'FileSystemAccess',
+    type: handle.kind,
+    handle,
+    initialized: false
+  });
   return webFile;
 }
 
@@ -18,6 +26,8 @@ export async function openFolder(): Promise<WebFile[]> {
   const list: WebFile[] = [];
   for await (let handle of dirHandle.values()) {
     const webFile = await parseWebFile({
+      origin: 'FileSystemAccess',
+      type: handle.kind,
       handle: handle,
       initialized: false
     })
@@ -27,19 +37,22 @@ export async function openFolder(): Promise<WebFile[]> {
 }
 
 async function parseWebFile(webFile: WebFile): Promise<WebFile> {
-  if (webFile.handle.kind === 'file') {
+  if (webFile?.handle?.kind === 'file') {
     if (!webFile.content) {
-      const file = await webFile.handle.getFile();
+      const file = await webFile?.handle?.getFile();
       const reader = await readFile(file);
-      webFile.content = reader;
+      webFile.fileType = file.type;
+      webFile.content = reader.result;
       webFile.initialized = true;
     }
-  } else if (webFile.handle.kind === 'directory') {
+  } else if (webFile?.handle?.kind === 'directory') {
     if (!Array.isArray(webFile.children)) {
       webFile.children = [];
     }
     for await (let handle of webFile.handle.values()) {
       webFile.children.push({
+        origin: 'FileSystemAccess',
+        type: handle.kind,
         handle,
         initialized: false
       })
@@ -58,7 +71,6 @@ function readFile(file: File, options: any = {}): Promise<FileReader> {
       resolve(reader);
     };
     reader.onerror = reject;
-
     if (!file.type || /^text\//i.test(file.type)) {
       reader.readAsText(file);
     } else {

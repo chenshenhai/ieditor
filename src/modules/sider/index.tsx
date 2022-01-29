@@ -1,5 +1,7 @@
 import React from 'react';
 import { createClassNameFunc } from '../../util/name';
+import { FlexColums } from '../../components/flex-colums';
+import { SideBar } from '../sidebar';
 import {
   TreeView, ExpandMoreIcon, ChevronRightIcon, TreeItem
 } from '../../components/ui';
@@ -59,7 +61,16 @@ export function Sider(props: TypeSiderProps) {
 
   return (
     <div className={getCls('container')}>
-      <RichObjectTreeView />
+      <FlexColums list={[
+        {
+          slot: (<SideBar />),
+          width: 40,
+        },
+        {
+          slot: (<RichObjectTreeView />),
+        }
+      ]} />
+      
     </div>
   )
 }

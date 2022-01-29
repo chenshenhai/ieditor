@@ -2,28 +2,27 @@ import React from 'react';
 import classNames from 'classnames';
 import { createClassNameFunc } from '../../util/name';
 
-const NAME = 'flex-rows';
+const NAME = 'flex-colums';
 const getCls = createClassNameFunc(NAME);
 
 
-export type TypeRowsProps = {
+export type TypeColumsProps = {
   list: {
     slot: React.ReactNode,
-    height?: number | string,
+    width?: number | string,
     className?: string,
   }[]
 }
 
-
-export function FlexRows(props: TypeRowsProps) {
+export function FlexColums(props: TypeColumsProps) {
   const { list } = props;
   return (
     <div className={getCls('container')} >
       {list.map((item, i) => {
-        const { height, slot, className } = item;
+        const { width, slot, className } = item;
         const style: React.CSSProperties = {};
-        if (height) {
-          style.height = height;
+        if (width) {
+          style.width = width;
           style.flex = 'none';
         }
         return (
