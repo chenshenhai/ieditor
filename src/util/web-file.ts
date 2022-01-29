@@ -1,18 +1,22 @@
 
-type WebFile = {
+export type TypeWebFile = {
+  id: string,
+  name: string,
+  children?: TypeWebFile[],
+
   initialized: boolean,
   type: 'file' | 'directory',
   origin: 'FileSystemAccess',
   content?: string | ArrayBuffer | null,
   fileType?: string,
-  children?: WebFile[],
-
   handle?: FileSystemDirectoryHandle | FileSystemFileHandle,
 }
 
-export async function openFile(): Promise<WebFile> {
+export async function openFile(): Promise<TypeWebFile> {
   const [ handle ] = await window.showOpenFilePicker();
   const webFile = await parseWebFile({
+    id: handle.name,  // TODO
+    name: handle.name,
     origin: 'FileSystemAccess',
     type: handle.kind,
     handle,
@@ -21,11 +25,13 @@ export async function openFile(): Promise<WebFile> {
   return webFile;
 }
 
-export async function openFolder(): Promise<WebFile[]> {
+export async function openFolder(): Promise<TypeWebFile> {
   const dirHandle = await window.showDirectoryPicker();
-  const list: WebFile[] = [];
+  const list: TypeWebFile[] = [];
   for await (let handle of dirHandle.values()) {
     const webFile = await parseWebFile({
+      id: handle.name, // TODO
+      name: handle.name,
       origin: 'FileSystemAccess',
       type: handle.kind,
       handle: handle,
@@ -33,10 +39,17 @@ export async function openFolder(): Promise<WebFile[]> {
     })
     list.push(webFile)
   }
-  return list;
+  return {
+    initialized: true,
+    id: dirHandle.name,
+    name: dirHandle.name,
+    type: dirHandle.kind,
+    origin: 'FileSystemAccess',
+    children: list,
+  };
 }
 
-async function parseWebFile(webFile: WebFile): Promise<WebFile> {
+async function parseWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
   if (webFile?.handle?.kind === 'file') {
     if (!webFile.content) {
       const file = await webFile?.handle?.getFile();
@@ -51,6 +64,8 @@ async function parseWebFile(webFile: WebFile): Promise<WebFile> {
     }
     for await (let handle of webFile.handle.values()) {
       webFile.children.push({
+        id: handle.name, // TODO
+        name: handle.name,
         origin: 'FileSystemAccess',
         type: handle.kind,
         handle,

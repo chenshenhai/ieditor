@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { createClassNameFunc } from '../../util/name';
 import { FlexColums } from '../../components/flex-colums';
 import { SideBar } from '../sidebar';
+import { Context } from '../../context';
 import {
   TreeView, ExpandMoreIcon, ChevronRightIcon, TreeItem
 } from '../../components/ui';
@@ -13,46 +14,36 @@ export type TypeSiderProps = {
   
 }
 
-const data = {
-  id: 'root',
-  name: 'Parent',
-  children: [
-    {
-      id: '1',
-      name: 'Child - 1',
-    },
-    {
-      id: '3',
-      name: 'Child - 3',
-      children: [
-        {
-          id: '4',
-          name: 'Child - 4',
-        },
-      ],
-    },
-  ],
+ 
+function renderTree(nodes: any) {
+  return (<TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
+    {Array.isArray(nodes.children)
+      ? nodes.children.map((node: any) => {
+        return renderTree(node)
+      }) : null}
+  </TreeItem>)
+  
 };
 
 function RichObjectTreeView() {
-  const renderTree = (nodes: any) => (
-    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
-      {Array.isArray(nodes.children)
-        ? nodes.children.map((node: any) => renderTree(node))
-        : null}
-    </TreeItem>
-  );
+  const { webFileList } = useContext(Context);
 
   return (
-    <TreeView
-      aria-label="rich object"
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpanded={['root']}
-      defaultExpandIcon={<ChevronRightIcon />}
-      sx={{ height: 110, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-    >
-      {renderTree(data)}
-    </TreeView>
+    <>
+      {webFileList ? (
+        <TreeView
+          aria-label="rich object"
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpanded={['root']}
+          defaultExpandIcon={<ChevronRightIcon />}
+          sx={{ height: 110, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+        >
+          {renderTree(webFileList)}
+        </TreeView>
+      ) : (
+        <div>No Data</div>
+      )}
+    </>
   );
 }
 
@@ -68,6 +59,7 @@ export function Sider(props: TypeSiderProps) {
         },
         {
           slot: (<RichObjectTreeView />),
+          className: getCls('file-tree')
         }
       ]} />
       

@@ -2,6 +2,7 @@ import React from 'react';
 import { createClassNameFunc } from '../../util/name';
 import { Button } from '../../components/ui';
 import { openFile, openFolder } from '../../util/web-file';
+import { eventHub } from '../../util/event';
 
 const NAME = 'header';
 const getCls = createClassNameFunc(NAME);
@@ -15,13 +16,13 @@ export const headerHeight = 36;
 export function Header(props: TypeHeaderProps) {
 
   const onClickOpenFile = async () => {
-    const data = await openFile();
-    console.log('data ===', data);
+    const webFile = await openFile();
+    eventHub.trigger('setWebFileList', webFile);
   }
 
   const onClickOpenFolder = async () => {
     const webFileList = await openFolder();
-    console.log('webFileList ====', webFileList);
+    eventHub.trigger('setWebFileList', webFileList);
   }
 
   return (
