@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Layout } from '../../components/split-layout';
 import { Edit } from '../edit';
 import { Preview } from '../preview';
+import { Sider } from '../sider'; 
 // import { createClassName } from './../../util/name';
 // const NAME = 'main';
 
@@ -15,9 +16,7 @@ export function Content(props: TypeIEditorProps) {
   const [markdown, setMarkdown] = useState<string>(defaultValue);
   return (
     <Layout 
-      left={
-        <div>List</div>
-      }
+      left={<Sider />}
       leftSize={0.2}
       right={
         <Layout
