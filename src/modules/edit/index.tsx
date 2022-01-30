@@ -36,12 +36,11 @@ export function Edit(props: TypeLayoutProps) {
 
   useEffect(() => {
     eventHub.on('setCurrentWebFile', (data: TypeWebFile | null) => {
-      // console.log('edit data ===', data);
       if (data && isMarkdownFile(data)) {
         setWebFile(data);
-      } else {
-        webFile.content = 'Not Support File Type!'
-        setWebFile(webFile)
+      } else if (data && data.type === 'file') {
+        data.content = 'Not Support File Type!'
+        setWebFile(data)
       }
     });
   }, []);

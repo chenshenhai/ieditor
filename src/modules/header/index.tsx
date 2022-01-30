@@ -18,6 +18,7 @@ export function Header(props: TypeHeaderProps) {
   const onClickOpenFile = async () => {
     const webFile = await openFile();
     eventHub.trigger('setWebFileList', webFile);
+    eventHub.trigger('setCurrentWebFile', webFile);
   }
 
   const onClickOpenFolder = async () => {
