@@ -16,7 +16,16 @@ export type TypeSiderProps = {
 
  
 function renderTree(nodes: any) {
-  return (<TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
+
+  const onClick = () => {
+    console.log('nodes ===', nodes);
+  }
+
+  return (
+  <TreeItem
+    key={nodes.id} nodeId={nodes.id} label={nodes.name}
+    onClick={onClick}
+  >
     {Array.isArray(nodes.children)
       ? nodes.children.map((node: any) => {
         return renderTree(node)

@@ -3,6 +3,7 @@ export type TypeWebFile = {
   id: string,
   name: string,
   children?: TypeWebFile[],
+  pathList: string[],
 
   initialized: boolean,
   type: 'file' | 'directory',
@@ -17,6 +18,7 @@ export async function openFile(): Promise<TypeWebFile> {
   const webFile = await parseWebFile({
     id: handle.name,  // TODO
     name: handle.name,
+    pathList: [handle.name],
     origin: 'FileSystemAccess',
     type: handle.kind,
     handle,
@@ -27,26 +29,16 @@ export async function openFile(): Promise<TypeWebFile> {
 
 export async function openFolder(): Promise<TypeWebFile> {
   const dirHandle = await window.showDirectoryPicker();
-  const list: TypeWebFile[] = [];
-  for await (let handle of dirHandle.values()) {
-    const webFile = await parseWebFile({
-      id: handle.name, // TODO
-      name: handle.name,
-      origin: 'FileSystemAccess',
-      type: handle.kind,
-      handle: handle,
-      initialized: false
-    })
-    list.push(webFile)
-  }
-  return {
-    initialized: true,
-    id: dirHandle.name,
+  const webFile = await parseWebFile({
+    id: dirHandle.name, // TODO
     name: dirHandle.name,
-    type: dirHandle.kind,
     origin: 'FileSystemAccess',
-    children: list,
-  };
+    type: dirHandle.kind,
+    handle: dirHandle,
+    pathList: [dirHandle.name],
+    initialized: false
+  })
+  return webFile;
 }
 
 async function parseWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
@@ -57,20 +49,29 @@ async function parseWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
       webFile.fileType = file.type;
       webFile.content = reader.result;
       webFile.initialized = true;
+      webFile.pathList = [...(webFile.pathList || []), ...[webFile.handle.name]];
     }
   } else if (webFile?.handle?.kind === 'directory') {
+   
     if (!Array.isArray(webFile.children)) {
       webFile.children = [];
     }
     for await (let handle of webFile.handle.values()) {
-      webFile.children.push({
+      const tempPathList = [ ...[], ...webFile.pathList ];
+
+      let _webFile: TypeWebFile = {
         id: handle.name, // TODO
         name: handle.name,
+        pathList: [...[], ...(tempPathList || []), ...[handle.name]],
         origin: 'FileSystemAccess',
         type: handle.kind,
         handle,
         initialized: false
-      })
+      }
+      if (_webFile.type === 'directory') {
+        _webFile = await parseWebFile(_webFile);
+      }
+      webFile.children.push(_webFile);
     }
     webFile.initialized = true;
   }
