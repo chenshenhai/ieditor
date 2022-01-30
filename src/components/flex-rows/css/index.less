@@ -1,0 +1,15 @@
+@flex-rows-prefix: ~"@{prefix}-flex-rows";
+
+.@{flex-rows-prefix}-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+
+  .@{flex-rows-prefix}-item {
+    display: flex;
+    width: 100%;
+    flex: 1;
+    overflow: auto;
+  }
+}

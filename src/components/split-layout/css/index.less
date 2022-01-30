@@ -1,0 +1,39 @@
+@split-layout-prefix: ~"@{prefix}-split-layout";
+
+.@{split-layout-prefix}-container {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+
+  .@{split-layout-prefix}-left {
+    position: relative;
+    display: flex;
+    height: 100%;
+
+    .@{split-layout-prefix}-split {
+      position: absolute;
+      right: -4px;
+      top: 0;
+      bottom: 0;
+      width: 10px;
+      cursor: ew-resize;
+      z-index: 1;
+    }
+    .@{split-layout-prefix}-split-line {
+      position: absolute;
+      left: 2px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--ieditor-color-level-4);
+      z-index: 1;
+    }
+  }
+
+  .@{split-layout-prefix}-right {
+    position: relative;
+    height: 100%;
+    display: flex;
+  }
+}
