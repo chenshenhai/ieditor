@@ -8,9 +8,8 @@ export type TypeSideBarProps = {
   
 }
 
-
 export function SideBar(props: TypeSideBarProps) {
-
+  console.log('render SideBar ...')
   return (
     <div className={getCls('container')}>
       Side Bar

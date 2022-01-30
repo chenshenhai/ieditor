@@ -1,9 +1,19 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createClassNameFunc } from '../../util/name';
-import CodeMirror from './codemirror'
+import { TypeWebFile, isMarkdownFile } from '../../util/web-file';
+import CodeMirror from './codemirror';
+import { eventHub } from '../../util/event';
 
 const NAME = 'edit';
 const getCls = createClassNameFunc(NAME);
+
+function getFileContent(webFile: TypeWebFile): string {
+  let content: string = '';
+  if (typeof webFile.content === 'string') {
+    content = webFile.content;
+  }
+  return content;
+}
 
 export type TypeLayoutProps = {
   defaultValue?: string;
@@ -12,12 +22,34 @@ export type TypeLayoutProps = {
 
 export function Edit(props: TypeLayoutProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const refEditor = useRef<CodeMirror.Editor>(null);
   const { defaultValue, onChange } = props;
+  const [ webFile, setWebFile ] = useState<TypeWebFile>({
+    id: '',
+    name: '',
+    pathList: [],
+    initialized: false,
+    type: 'file',
+    origin: 'FileSystemAccess',
+    content: defaultValue || '',
+  })
+
+  useEffect(() => {
+    eventHub.on('setCurrentWebFile', (data: TypeWebFile | null) => {
+      // console.log('edit data ===', data);
+      if (data && isMarkdownFile(data)) {
+        setWebFile(data);
+      } else {
+        webFile.content = 'Not Support File Type!'
+        setWebFile(webFile)
+      }
+    });
+  }, []);
+
   useEffect(() => {
     if (ref && ref.current) {
-      
-      const editor = CodeMirror(ref.current, {
-        value: defaultValue || '',
+      const editor: CodeMirror.Editor = CodeMirror(ref.current, {
+        value: getFileContent(webFile),
         mode: 'markdown',
         readOnly: false,
         tabSize: 2,
@@ -28,6 +60,8 @@ export function Edit(props: TypeLayoutProps) {
         foldGutter: true,
         gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
       });
+      // @ts-ignore
+      refEditor.current = editor;
       editor.on('change', () => {
         if (typeof onChange === 'function') {
           const value = editor.getValue();
@@ -42,6 +76,11 @@ export function Edit(props: TypeLayoutProps) {
     }
     
   }, []);
+
+  useEffect(() => {
+
+    refEditor.current?.setValue(getFileContent(webFile));
+  }, [webFile]);
 
   return (
     <div className={getCls('container')}>

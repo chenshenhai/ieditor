@@ -1,11 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import { createClassNameFunc } from '../../util/name';
 import { FlexColums } from '../../components/flex-colums';
 import { SideBar } from '../sidebar';
-import { Context } from '../../context';
 import {
   TreeView, ExpandMoreIcon, ChevronRightIcon, TreeItem
 } from '../../components/ui';
+import { eventHub } from '../../util/event';
+import { TypeWebFile, initWebFile } from '../../util/web-file';
 
 const NAME = 'sider';
 const getCls = createClassNameFunc(NAME);
@@ -15,19 +16,20 @@ export type TypeSiderProps = {
 }
 
  
-function renderTree(nodes: any) {
+function renderTree(webFile: TypeWebFile) {
 
-  const onClick = () => {
-    console.log('nodes ===', nodes);
+  const onClick = async () => {
+    webFile = await initWebFile(webFile);
+    eventHub.trigger('setCurrentWebFile', webFile)
   }
 
   return (
   <TreeItem
-    key={nodes.id} nodeId={nodes.id} label={nodes.name}
+    key={webFile.id} nodeId={webFile.id} label={webFile.name}
     onClick={onClick}
   >
-    {Array.isArray(nodes.children)
-      ? nodes.children.map((node: any) => {
+    {Array.isArray(webFile.children)
+      ? webFile.children.map((node: any) => {
         return renderTree(node)
       }) : null}
   </TreeItem>)
@@ -35,8 +37,10 @@ function renderTree(nodes: any) {
 };
 
 function RichObjectTreeView() {
-  const { webFileList } = useContext(Context);
-
+  const [webFileList, setWebFileList] = useState<TypeWebFile|null>(null);
+  eventHub.on('setWebFileList', (webFileList) => {
+    setWebFileList(webFileList);
+  })
   return (
     <>
       {webFileList ? (

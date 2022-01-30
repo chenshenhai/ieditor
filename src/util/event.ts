@@ -1,9 +1,9 @@
-import { TypeContextData } from './../context'; 
+import { TypeWebFile } from './web-file';
 
 type TypeEventArgMap  = {
-  'setCurrentWebFile': TypeContextData['currentWebFile'],
-  'setWebFileList': TypeContextData['webFileList'],
-  'setCurrentPathList': TypeContextData['currentPathList'],
+  'setCurrentWebFile': TypeWebFile | null,
+  'setWebFileList': TypeWebFile | null,
+  'setCurrentPathList': string[],
   'getCurrentWebFile': void,
   'getWebFileList': void,
   'getCurrentPathList': void
@@ -13,9 +13,9 @@ type TypeEventTriggerResult = {
   'setCurrentWebFile': void,
   'setWebFileList': void,
   'setCurrentPathList': void,
-  'getCurrentWebFile': TypeContextData['currentWebFile'],
-  'getWebFileList': TypeContextData['webFileList'],
-  'getCurrentPathList': TypeContextData['currentPathList']
+  'getCurrentWebFile': TypeWebFile | null,
+  'getWebFileList':TypeWebFile | null,
+  'getCurrentPathList': string[],
 }
   
 interface TypeEvent {

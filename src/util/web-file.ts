@@ -4,13 +4,22 @@ export type TypeWebFile = {
   name: string,
   children?: TypeWebFile[],
   pathList: string[],
-
   initialized: boolean,
   type: 'file' | 'directory',
   origin: 'FileSystemAccess',
   content?: string | ArrayBuffer | null,
   fileType?: string,
   handle?: FileSystemDirectoryHandle | FileSystemFileHandle,
+}
+
+export async function initWebFile(webFile: TypeWebFile) {
+  if (webFile.initialized !== true && webFile?.handle?.kind === 'file') {
+    const file = await webFile?.handle?.getFile();
+    const reader = await readFile(file);
+    webFile.content = reader.result;
+    webFile.initialized = true;
+  }
+  return webFile
 }
 
 export async function openFile(): Promise<TypeWebFile> {
@@ -66,7 +75,7 @@ async function parseWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
         origin: 'FileSystemAccess',
         type: handle.kind,
         handle,
-        initialized: false
+        initialized: handle.kind === 'directory'
       }
       if (_webFile.type === 'directory') {
         _webFile = await parseWebFile(_webFile);
@@ -93,4 +102,14 @@ function readFile(file: File, options: any = {}): Promise<FileReader> {
       reader.readAsDataURL(file);
     }
   });
+}
+
+export function isMarkdownFile(webFile: TypeWebFile): boolean {
+  if (webFile.type === 'file' 
+    && webFile.initialized === true
+    && webFile.name.endsWith('.md')
+  ) {
+    return true;
+  }
+  return false;
 }
