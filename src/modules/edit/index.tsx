@@ -3,6 +3,7 @@ import { createClassNameFunc } from '../../util/name';
 import { TypeWebFile, isMarkdownFile } from '../../util/web-file';
 import CodeMirror from './codemirror';
 import { Context } from '../../context';
+import { eventHub } from '../../util/event';
 
 const NAME = 'edit';
 const getCls = createClassNameFunc(NAME);
@@ -64,6 +65,13 @@ export function Edit(props: TypeLayoutProps) {
       // // window.addEventListener('resize',() => {
       // //   editor.refresh()
       // // })
+
+      eventHub.on('setEditValue', (value: string) => {
+        editor.setValue(value);
+      });
+      eventHub.on('getEditValue', () => {
+        return editor.getValue();
+      });
     }
     
   }, []);

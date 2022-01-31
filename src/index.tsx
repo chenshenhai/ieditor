@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { createClassName, createClassNameFunc } from './util/name';
-import { FlexRows } from './components/flex-rows';
+import { FlexRows, FlexRowItem } from './components/flex-rows';
 import { Content } from './modules/content';
 import { Header, headerHeight } from './modules/header';
 import { Footer, footerHeight } from './modules/footer';
@@ -58,24 +58,17 @@ function IEditor(props: TypeIEditorProps) {
         )}
         style={getStyle(props)}
       >
-        <FlexRows
-          list={[
-            {
-              slot: (<Header />),
-              height: headerHeight,
-              className: getCls('header'),
-            },
-            {
-              slot: (<Content defaultValue={defaultValue}/>)
-            },
-            {
-              slot: (<Footer />),
-              height: footerHeight,
-              className: getCls('footer'),
-            },
-          ]}
-        />
-        
+        <FlexRows>
+          <FlexRowItem height={headerHeight} className={getCls('header')}>
+            <Header />
+          </FlexRowItem>
+          <FlexRowItem>
+            <Content defaultValue={defaultValue}/>
+          </FlexRowItem>
+          <FlexRowItem height={footerHeight} className={getCls('footer')}>
+            <Footer />
+          </FlexRowItem>
+        </FlexRows>
       </div>
     </Provider>
   )

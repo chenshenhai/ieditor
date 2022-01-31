@@ -1,11 +1,13 @@
+
+
 type TypeEventArgMap  = {
-  'setCurrentPathList': string[],
-  'getCurrentPathList': void
+  'setEditValue': string,
+  'getEditValue': void
 }
 
 type TypeEventTriggerResult = {
-  'setCurrentPathList': void,
-  'getCurrentPathList': string[],
+  'setEditValue': void,
+  'getEditValue': string,
 }
   
 interface TypeEvent {

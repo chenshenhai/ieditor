@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
 import { createClassNameFunc } from '../../util/name';
 import { Button } from '../../components/ui';
-import { openFile, openFolder } from '../../util/web-file';
+import { openFile, openFolder, saveFile } from '../../util/web-file';
 import { Context } from '../../context';
+import { eventHub } from '../../util/event';
 
 const NAME = 'header';
 const getCls = createClassNameFunc(NAME);
@@ -20,8 +21,8 @@ export function Header(props: TypeHeaderProps) {
 
   const onClickOpenFile = async () => {
     const webFile = await openFile();
-    dispatch({ type: 'updateWebFileList', payload: { currentWebFile: webFile }})
-    dispatch({ type: 'updateCurrentWebFile', payload: { webFileList: webFile }})
+    dispatch({ type: 'updateWebFileList', payload: { webFileList: webFile }})
+    dispatch({ type: 'updateCurrentWebFile', payload: { currentWebFile: webFile }})
   }
 
   const onClickOpenFolder = async () => {
@@ -31,13 +32,10 @@ export function Header(props: TypeHeaderProps) {
 
   const onClickSave = async () => {
     // const currentWebFile = dispatchCurrentWebFile({name: 'get'});
-    console.log('save currentWebFile ===', store.currentWebFile);
-
-    // let handle: FileSystemDirectoryHandle | FileSystemFileHandle | undefined | null = webFile?.handle;
-    // if (!handle) {
-    //   handle = await createFileHandle('md');
-    // }
-    // saveFile();
+    const content: string = eventHub.trigger('getEditValue', undefined)?.[0] || '';
+    if (store?.currentWebFile?.handle && store?.currentWebFile?.handle instanceof FileSystemFileHandle) {
+      saveFile(store.currentWebFile.handle, content)
+    }
   }
 
   return (
