@@ -1,4 +1,3 @@
-
 export type TypeWebFile = {
   id: string,
   name: string,
@@ -10,6 +9,17 @@ export type TypeWebFile = {
   content?: string | ArrayBuffer | null,
   fileType?: string,
   handle?: FileSystemDirectoryHandle | FileSystemFileHandle,
+}
+
+export function createWebFile(type?: TypeWebFile['type']): TypeWebFile {
+  return {
+    id: '',
+    name: '',
+    pathList: [],
+    initialized: false,
+    type: type || 'file',
+    origin: 'FileSystemAccess',
+  }
 }
 
 export async function initWebFile(webFile: TypeWebFile) {
@@ -48,6 +58,38 @@ export async function openFolder(): Promise<TypeWebFile> {
     initialized: false
   })
   return webFile;
+}
+
+export async function saveFile(fileHandle: FileSystemFileHandle, content: string) {
+  const writable = await fileHandle.createWritable();
+  await writable.write(content);
+  await writable.close();
+}
+
+
+export type TypeFileExtName = 'md' | 'png' | 'jpg' | 'jpeg';
+
+const fileTypeMap: {
+  [key: string]: string;
+} = {
+  'md': 'text/plain',
+  'png': 'image/png',
+  'jpg': 'image/jpeg',
+}
+
+export async function createFileHandle(
+  extname: TypeFileExtName,
+): Promise<FileSystemFileHandle|null> {
+  if (!fileTypeMap[extname]) {
+    return null;
+  }
+  const opts = {
+    types: [{
+      // description: '',
+      accept: {[fileTypeMap[extname]]: [`.${extname}`]},
+    }],
+  };
+  return window.showSaveFilePicker(opts);
 }
 
 async function parseWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
@@ -113,3 +155,6 @@ export function isMarkdownFile(webFile: TypeWebFile): boolean {
   }
   return false;
 }
+
+
+

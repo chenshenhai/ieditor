@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { createClassNameFunc } from '../../util/name';
 import { Button } from '../../components/ui';
 import { openFile, openFolder } from '../../util/web-file';
-import { eventHub } from '../../util/event';
+import { Context } from '../../context';
 
 const NAME = 'header';
 const getCls = createClassNameFunc(NAME);
@@ -14,16 +14,30 @@ export type TypeHeaderProps = {
 export const headerHeight = 36;
 
 export function Header(props: TypeHeaderProps) {
+  console.log('re-render Header ...')
+
+  const { store, dispatch } = useContext(Context);
 
   const onClickOpenFile = async () => {
     const webFile = await openFile();
-    eventHub.trigger('setWebFileList', webFile);
-    eventHub.trigger('setCurrentWebFile', webFile);
+    dispatch({ type: 'updateWebFileList', payload: { currentWebFile: webFile }})
+    dispatch({ type: 'updateCurrentWebFile', payload: { webFileList: webFile }})
   }
 
   const onClickOpenFolder = async () => {
     const webFileList = await openFolder();
-    eventHub.trigger('setWebFileList', webFileList);
+    dispatch({ type: 'updateWebFileList', payload: { webFileList: webFileList }})
+  }
+
+  const onClickSave = async () => {
+    // const currentWebFile = dispatchCurrentWebFile({name: 'get'});
+    console.log('save currentWebFile ===', store.currentWebFile);
+
+    // let handle: FileSystemDirectoryHandle | FileSystemFileHandle | undefined | null = webFile?.handle;
+    // if (!handle) {
+    //   handle = await createFileHandle('md');
+    // }
+    // saveFile();
   }
 
   return (
@@ -34,6 +48,7 @@ export function Header(props: TypeHeaderProps) {
       }}>
       <Button onClick={onClickOpenFile}>Open File</Button>
       <Button onClick={onClickOpenFolder}>Open Folder</Button>
+      <Button onClick={onClickSave}>Save</Button>
     </div>
   )
 }

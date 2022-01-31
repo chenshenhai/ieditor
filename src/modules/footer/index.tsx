@@ -11,7 +11,7 @@ export type TypeFooterProps = {
 export const footerHeight = 30;
 
 export function Footer(props: TypeFooterProps) {
-  console.log('render Footer...')
+  console.log('re-render Footer...')
   return (
     <div
       className={getCls('container')}

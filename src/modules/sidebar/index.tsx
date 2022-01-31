@@ -22,7 +22,7 @@ const iconList: {
 ]
 
 export function SideBar(props: TypeSideBarProps) {
-  console.log('render SideBar ...')
+  console.log('re-render SideBar ...')
   return (
     <div className={getCls('container')}>
       {iconList.map((item, i) => {

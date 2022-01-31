@@ -1,20 +1,10 @@
-import { TypeWebFile } from './web-file';
-
 type TypeEventArgMap  = {
-  'setCurrentWebFile': TypeWebFile | null,
-  'setWebFileList': TypeWebFile | null,
   'setCurrentPathList': string[],
-  'getCurrentWebFile': void,
-  'getWebFileList': void,
   'getCurrentPathList': void
 }
 
 type TypeEventTriggerResult = {
-  'setCurrentWebFile': void,
-  'setWebFileList': void,
   'setCurrentPathList': void,
-  'getCurrentWebFile': TypeWebFile | null,
-  'getWebFileList':TypeWebFile | null,
   'getCurrentPathList': string[],
 }
   

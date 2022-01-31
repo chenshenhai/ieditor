@@ -5,7 +5,7 @@ import { FlexRows } from './components/flex-rows';
 import { Content } from './modules/content';
 import { Header, headerHeight } from './modules/header';
 import { Footer, footerHeight } from './modules/footer';
-import { Context } from './context';
+import { Provider } from './context';
 // import { eventHub } from './util/event';
 
 const NAME = 'wrapper';
@@ -51,7 +51,7 @@ function IEditor(props: TypeIEditorProps) {
   const { className, defaultValue = '' } = props;
 
   return (
-    <Context.Provider value={{}}>
+    <Provider>
       <div
         className={classNames(
           createClassName(NAME), className
@@ -77,7 +77,7 @@ function IEditor(props: TypeIEditorProps) {
         />
         
       </div>
-    </Context.Provider>
+    </Provider>
   )
 }
 
