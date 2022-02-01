@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { createClassNameFunc } from '../../util/name';
 import { FlexColums, FlexColumItem } from '../../components/flex-colums';
+import { Button } from '../../components/ui';
 import { SideBar } from '../sidebar';
 import {
-  TreeView, ExpandMoreIcon, ChevronRightIcon, TreeItem
+  TreeView, ExpandMoreIcon, ChevronRightIcon, FolderOpen, TreeItem
 } from '../../components/ui';
 import { TypeWebFile, initWebFile } from '../../util/web-file';
 import { Context } from '../../context';
@@ -74,7 +75,21 @@ export function Sider(props: TypeSiderProps) {
           <SideBar />
         </FlexColumItem>
         <FlexColumItem className={getCls('file-tree')}>
+        {store.webFileList ? (
           <RichObjectTreeView webFileList={store.webFileList} />
+        ) : (
+          <div className={getCls('open-groups')} >
+            <div className={getCls('empty-icon')}>
+              <FolderOpen fontSize='inherit' />
+            </div>
+            <div className={getCls('open-item')} >
+              <Button disableRipple className={getCls('open-btn')}>Open File</Button>
+            </div>
+            <div className={getCls('open-item')} >
+              <Button disableRipple className={getCls('open-btn')}>Open Folder</Button>
+            </div>
+          </div>
+        )}
         </FlexColumItem>
       </FlexColums>
     </div>

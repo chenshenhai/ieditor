@@ -38,15 +38,20 @@ export function Header(props: TypeHeaderProps) {
     }
   }
 
+  const onClickFile = async () => {
+
+  }
+
   return (
     <div
       className={getCls('container')}
       style={{
         height: headerHeight,
       }}>
-      <Button onClick={onClickOpenFile}>Open File</Button>
-      <Button onClick={onClickOpenFolder}>Open Folder</Button>
-      <Button onClick={onClickSave}>Save</Button>
+      <Button className={getCls('btn')} onClick={onClickFile}>File</Button>
+      <Button className={getCls('btn')} onClick={onClickOpenFile}>Open File</Button>
+      <Button className={getCls('btn')} onClick={onClickOpenFolder}>Open Folder</Button>
+      <Button className={getCls('btn')} onClick={onClickSave}>Save</Button>
     </div>
   )
 }

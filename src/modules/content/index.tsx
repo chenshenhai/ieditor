@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // import classNames from 'classnames';
-import { Layout } from '../../components/split-layout';
+import { SplitLayout } from '../../components/split-layout';
 import { Edit } from '../edit';
 import { Preview } from '../preview';
 import { Sider } from '../sider'; 
@@ -15,11 +15,11 @@ export function Content(props: TypeIEditorProps) {
   const { defaultValue = '' } = props;
   const [markdown, setMarkdown] = useState<string>(defaultValue);
   return (
-    <Layout 
+    <SplitLayout 
       left={<Sider />}
       leftSize={0.16}
       right={
-        <Layout
+        <SplitLayout
           left={
             <Edit
               defaultValue={defaultValue}
