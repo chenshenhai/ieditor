@@ -1,9 +1,20 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import { createClassNameFunc } from '../../util/name';
-import CodeMirror from './codemirror'
+import { TypeWebFile, isMarkdownFile } from '../../util/web-file';
+import CodeMirror from './codemirror';
+import { Context } from '../../context';
+import { eventHub } from '../../util/event';
 
 const NAME = 'edit';
 const getCls = createClassNameFunc(NAME);
+
+function getFileContent(webFile: TypeWebFile): string {
+  let content: string = '';
+  if (typeof webFile.content === 'string') {
+    content = webFile.content;
+  }
+  return content;
+}
 
 export type TypeLayoutProps = {
   defaultValue?: string;
@@ -12,12 +23,25 @@ export type TypeLayoutProps = {
 
 export function Edit(props: TypeLayoutProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const refEditor = useRef<CodeMirror.Editor>(null);
   const { defaultValue, onChange } = props;
+  const { store, dispatch } = useContext(Context);
+ 
+  useEffect(() => {
+    if (store?.currentWebFile) {
+      store.currentWebFile.content = defaultValue;
+    }
+    dispatch({
+      type: 'updateCurrentWebFile',
+      payload: store,
+    })
+  }, []);
+
+
   useEffect(() => {
     if (ref && ref.current) {
-      
-      const editor = CodeMirror(ref.current, {
-        value: defaultValue || '',
+      const editor: CodeMirror.Editor = CodeMirror(ref.current, {
+        value: getFileContent(store.currentWebFile),
         mode: 'markdown',
         readOnly: false,
         tabSize: 2,
@@ -28,6 +52,8 @@ export function Edit(props: TypeLayoutProps) {
         foldGutter: true,
         gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
       });
+      // @ts-ignore
+      refEditor.current = editor;
       editor.on('change', () => {
         if (typeof onChange === 'function') {
           const value = editor.getValue();
@@ -39,9 +65,22 @@ export function Edit(props: TypeLayoutProps) {
       // // window.addEventListener('resize',() => {
       // //   editor.refresh()
       // // })
+
+      eventHub.on('setEditValue', (value: string) => {
+        editor.setValue(value);
+      });
+      eventHub.on('getEditValue', () => {
+        return editor.getValue();
+      });
     }
     
   }, []);
+
+  useEffect(() => {
+    if (isMarkdownFile(store.currentWebFile)) {
+      refEditor.current?.setValue(getFileContent(store.currentWebFile));
+    }
+  }, [store.currentWebFile]);
 
   return (
     <div className={getCls('container')}>

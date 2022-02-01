@@ -6,35 +6,40 @@ const NAME = 'flex-rows';
 const getCls = createClassNameFunc(NAME);
 
 
-export type TypeRowsProps = {
-  list: {
-    slot: React.ReactNode,
-    height?: number | string,
-    className?: string,
-  }[]
+export type TypeRowItemProps = {
+  key?: any,
+  height?: number | string,
+  className?: string,
+  children?: React.ReactNode,
 }
 
 
+export type TypeRowsProps = {
+  children?: React.ReactNode,
+}
+
+export function FlexRowItem(props: TypeRowItemProps) {
+  const { height, className, key, children } = props;
+    const style: React.CSSProperties = {};
+    if (height) {
+      style.height = height;
+      style.flex = 'none';
+    }
+  return (
+    <div
+      key={key}
+      className={classNames(getCls('item'), className)}
+      style={style}>
+      {children}
+    </div>
+  )
+}
+
 export function FlexRows(props: TypeRowsProps) {
-  const { list } = props;
+  const { children } = props;
   return (
     <div className={getCls('container')} >
-      {list.map((item, i) => {
-        const { height, slot, className } = item;
-        const style: React.CSSProperties = {};
-        if (height) {
-          style.height = height;
-          style.flex = 'none';
-        }
-        return (
-          <div
-            key={i}
-            className={classNames(getCls('item'), className)}
-            style={style}>
-            {slot}
-          </div>
-        )
-      })}
+      {children}
     </div>
   )
 }

@@ -1,16 +1,35 @@
-
 export type TypeWebFile = {
   id: string,
   name: string,
   children?: TypeWebFile[],
   pathList: string[],
-
   initialized: boolean,
   type: 'file' | 'directory',
   origin: 'FileSystemAccess',
   content?: string | ArrayBuffer | null,
   fileType?: string,
   handle?: FileSystemDirectoryHandle | FileSystemFileHandle,
+}
+
+export function createWebFile(type?: TypeWebFile['type']): TypeWebFile {
+  return {
+    id: '',
+    name: '',
+    pathList: [],
+    initialized: false,
+    type: type || 'file',
+    origin: 'FileSystemAccess',
+  }
+}
+
+export async function initWebFile(webFile: TypeWebFile) {
+  if (webFile.initialized !== true && webFile?.handle?.kind === 'file') {
+    const file = await webFile?.handle?.getFile();
+    const reader = await readFile(file);
+    webFile.content = reader.result;
+    webFile.initialized = true;
+  }
+  return webFile
 }
 
 export async function openFile(): Promise<TypeWebFile> {
@@ -41,6 +60,38 @@ export async function openFolder(): Promise<TypeWebFile> {
   return webFile;
 }
 
+export async function saveFile(fileHandle: FileSystemFileHandle, content: string) {
+  const writable = await fileHandle.createWritable();
+  await writable.write(content);
+  await writable.close();
+}
+
+
+export type TypeFileExtName = 'md' | 'png' | 'jpg' | 'jpeg';
+
+const fileTypeMap: {
+  [key: string]: string;
+} = {
+  'md': 'text/plain',
+  'png': 'image/png',
+  'jpg': 'image/jpeg',
+}
+
+export async function createFileHandle(
+  extname: TypeFileExtName,
+): Promise<FileSystemFileHandle|null> {
+  if (!fileTypeMap[extname]) {
+    return null;
+  }
+  const opts = {
+    types: [{
+      // description: '',
+      accept: {[fileTypeMap[extname]]: [`.${extname}`]},
+    }],
+  };
+  return window.showSaveFilePicker(opts);
+}
+
 async function parseWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
   if (webFile?.handle?.kind === 'file') {
     if (!webFile.content) {
@@ -66,7 +117,7 @@ async function parseWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
         origin: 'FileSystemAccess',
         type: handle.kind,
         handle,
-        initialized: false
+        initialized: handle.kind === 'directory'
       }
       if (_webFile.type === 'directory') {
         _webFile = await parseWebFile(_webFile);
@@ -94,3 +145,16 @@ function readFile(file: File, options: any = {}): Promise<FileReader> {
     }
   });
 }
+
+export function isMarkdownFile(webFile: TypeWebFile): boolean {
+  if (webFile.type === 'file' 
+    && webFile.initialized === true
+    && webFile.name.endsWith('.md')
+  ) {
+    return true;
+  }
+  return false;
+}
+
+
+

@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
 import { createClassNameFunc } from '../../util/name';
-import { FlexColums } from '../../components/flex-colums';
+import { FlexColums, FlexColumItem } from '../../components/flex-colums';
 import { SideBar } from '../sidebar';
-import { Context } from '../../context';
 import {
   TreeView, ExpandMoreIcon, ChevronRightIcon, TreeItem
 } from '../../components/ui';
+import { TypeWebFile, initWebFile } from '../../util/web-file';
+import { Context } from '../../context';
 
 const NAME = 'sider';
 const getCls = createClassNameFunc(NAME);
@@ -15,28 +16,33 @@ export type TypeSiderProps = {
 }
 
  
-function renderTree(nodes: any) {
-
-  const onClick = () => {
-    console.log('nodes ===', nodes);
+function renderTree(webFile: TypeWebFile) {
+  const { store, dispatch } = useContext(Context);
+  const onClick = async () => {
+    webFile = await initWebFile(webFile);
+    store.currentWebFile = webFile;
+    dispatch({
+      type: 'updateCurrentWebFile',
+      payload: store,
+    })
   }
 
   return (
   <TreeItem
-    key={nodes.id} nodeId={nodes.id} label={nodes.name}
+    key={webFile.id} nodeId={webFile.id} label={webFile.name}
     onClick={onClick}
   >
-    {Array.isArray(nodes.children)
-      ? nodes.children.map((node: any) => {
+    {Array.isArray(webFile.children)
+      ? webFile.children.map((node: any) => {
         return renderTree(node)
       }) : null}
   </TreeItem>)
   
 };
 
-function RichObjectTreeView() {
-  const { webFileList } = useContext(Context);
-
+function RichObjectTreeView(props: { webFileList: TypeWebFile | null }) {
+  const { webFileList } = props;
+  console.log('re-render RichObjectTreeView ...')
   return (
     <>
       {webFileList ? (
@@ -58,20 +64,19 @@ function RichObjectTreeView() {
 
 
 export function Sider(props: TypeSiderProps) {
+  const { store } = useContext(Context);
+  console.log('re-render Sider... ') 
 
   return (
     <div className={getCls('container')}>
-      <FlexColums list={[
-        {
-          slot: (<SideBar />),
-          width: 40,
-        },
-        {
-          slot: (<RichObjectTreeView />),
-          className: getCls('file-tree')
-        }
-      ]} />
-      
+      <FlexColums>
+        <FlexColumItem width={40}>
+          <SideBar />
+        </FlexColumItem>
+        <FlexColumItem className={getCls('file-tree')}>
+          <RichObjectTreeView webFileList={store.webFileList} />
+        </FlexColumItem>
+      </FlexColums>
     </div>
   )
 }
