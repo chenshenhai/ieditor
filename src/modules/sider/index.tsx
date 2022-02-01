@@ -18,15 +18,10 @@ export type TypeSiderProps = {
 }
 
  
-function renderTree(webFile: TypeWebFile) {
-  const { store, dispatch } = useContext(Context);
+function renderTree(webFile: TypeWebFile, clickCallback: (webFile: TypeWebFile) => void) {
+  // const { store, dispatch } = useContext(Context);
   const onClick = async () => {
-    webFile = await initWebFile(webFile);
-    store.currentWebFile = webFile;
-    dispatch({
-      type: 'updateCurrentWebFile',
-      payload: store,
-    })
+    clickCallback(webFile);
   }
 
   return (
@@ -36,14 +31,23 @@ function renderTree(webFile: TypeWebFile) {
   >
     {Array.isArray(webFile.children)
       ? webFile.children.map((node: any) => {
-        return renderTree(node)
+        return renderTree(node, clickCallback)
       }) : null}
   </TreeItem>)
   
 };
 
 function RichObjectTreeView(props: { webFileList: TypeWebFile | null }) {
+  const { store, dispatch } = useContext(Context);
   const { webFileList } = props;
+  const clickCallback = async (webFile: TypeWebFile) => {
+    webFile = await initWebFile(webFile);
+    store.currentWebFile = webFile;
+    dispatch({
+      type: 'updateCurrentWebFile',
+      payload: store,
+    })
+  }
   return (
     <>
       {webFileList ? (
@@ -54,7 +58,7 @@ function RichObjectTreeView(props: { webFileList: TypeWebFile | null }) {
           defaultExpandIcon={<ChevronRightIcon />}
           sx={{ height: 110, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
         >
-          {renderTree(webFileList)}
+          {renderTree(webFileList, clickCallback)}
         </TreeView>
       ) : (
         <div>No Data</div>

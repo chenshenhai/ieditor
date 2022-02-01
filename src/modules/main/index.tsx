@@ -28,7 +28,13 @@ export function Main(props: TypeIEditorProps) {
           />
         }
         leftSize={0.5}
-        right={<Preview markdown={markdown} />}
+        right={(<>
+          {typeof store.currentWebFile.content === 'string' ? (
+            <Preview markdown={store.currentWebFile.content} />
+          ) : (
+            <div>Unsupport content</div>
+          )}
+        </>)}
       />
     </>
   )
