@@ -2,12 +2,16 @@
 
 type TypeEventArgMap  = {
   'setEditValue': string,
-  'getEditValue': void
+  'getEditValue': void,
+  'openFile': void,
+  'openFolder': void,
 }
 
 type TypeEventTriggerResult = {
   'setEditValue': void,
   'getEditValue': string,
+  'openFile': void,
+  'openFolder': void,
 }
   
 interface TypeEvent {

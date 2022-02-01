@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { createClassNameFunc } from '../../util/name';
 import { Button } from '../../components/ui';
 import { openFile, openFolder, saveFile } from '../../util/web-file';
@@ -37,6 +37,15 @@ export function Header(props: TypeHeaderProps) {
       saveFile(store.currentWebFile.handle, content)
     }
   }
+
+  useEffect(() => {
+    eventHub.on('openFile', () => {
+      onClickOpenFile();
+    });
+    eventHub.on('openFolder', () => {
+      onClickOpenFolder();
+    })
+  }, []);
 
   const onClickFile = async () => {
 

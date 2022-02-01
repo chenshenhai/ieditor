@@ -3,6 +3,7 @@ import { createClassNameFunc } from '../../util/name';
 import { FlexColums, FlexColumItem } from '../../components/flex-colums';
 import { Button } from '../../components/ui';
 import { SideBar } from '../sidebar';
+import { eventHub } from '../../util/event';
 import {
   TreeView, ExpandMoreIcon, ChevronRightIcon, FolderOpen, TreeItem
 } from '../../components/ui';
@@ -83,10 +84,18 @@ export function Sider(props: TypeSiderProps) {
               <FolderOpen fontSize='inherit' />
             </div>
             <div className={getCls('open-item')} >
-              <Button disableRipple className={getCls('open-btn')}>Open File</Button>
+              <Button variant="outlined" disableRipple className={getCls('open-btn')}
+                onClick={() => {
+                  eventHub.trigger('openFile', undefined);
+                }}
+              >Open File</Button>
             </div>
             <div className={getCls('open-item')} >
-              <Button disableRipple className={getCls('open-btn')}>Open Folder</Button>
+              <Button variant="outlined" disableRipple className={getCls('open-btn')}
+                onClick={() => {
+                  eventHub.trigger('openFolder', undefined);
+                }}
+              >Open Folder</Button>
             </div>
           </div>
         )}

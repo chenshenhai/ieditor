@@ -30,19 +30,28 @@
     flex-direction: column;
   }
 
-  .@{sider-prefix}-open-btn {
-    text-transform: none;
-    font-size: 14px;
-    color: var(--ieditor-color-level-6);
-
-    &:hover {
-      background-color: var(--ieditor-color-level-3);
-      color: var(--ieditor-color-level-7);
-    }
+  .@{sider-prefix}-open-item {
+    margin-bottom: 10px;
   }
 
   .@{sider-prefix}-empty-icon {
     color: var(--ieditor-color-level-4);
-    font-size: 32px;
+    font-size: 48px;
+    margin-bottom: 10px;
   }
+
+  .@{sider-prefix}-open-btn {
+    text-transform: none;
+    font-size: 14px;
+    color: var(--ieditor-color-level-6);
+    border-color: var(--ieditor-color-level-6);
+
+    &:hover {
+      background-color: var(--ieditor-color-level-3);
+      color: var(--ieditor-color-level-7);
+      border-color: var(--ieditor-color-level-6);
+    }
+  }
+
+  
 }
