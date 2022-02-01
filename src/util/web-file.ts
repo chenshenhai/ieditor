@@ -1,3 +1,13 @@
+export type TypeFileExtName = 'md' | 'png' | 'jpg' | 'jpeg';
+
+const fileTypeMap: {
+  [key: string]: string;
+} = {
+  'md': 'text/plain',
+  'png': 'image/png',
+  'jpg': 'image/jpeg',
+}
+
 export type TypeWebFile = {
   id: string,
   name: string,
@@ -11,21 +21,32 @@ export type TypeWebFile = {
   handle?: FileSystemDirectoryHandle | FileSystemFileHandle,
 }
 
+function getFileTypeByName(webFile: TypeWebFile): string {
+  let fileType = '';
+  if (typeof webFile.name === 'string' && webFile.name && webFile.name.indexOf('.') > 0) {
+    const extName = webFile.name.substring(webFile.name.lastIndexOf('.') + 1);
+    fileType = fileTypeMap[extName];
+  }
+  return fileType;
+}
+
 export function createWebFile(type?: TypeWebFile['type']): TypeWebFile {
   return {
     id: '',
     name: '',
     pathList: [],
+    fileType: fileTypeMap['md'],
     initialized: false,
     type: type || 'file',
     origin: 'FileSystemAccess',
   }
 }
 
-export async function initWebFile(webFile: TypeWebFile) {
+export async function initWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
   if (webFile.initialized !== true && webFile?.handle?.kind === 'file') {
     const file = await webFile?.handle?.getFile();
     const reader = await readFile(file);
+    webFile.fileType = file.type || getFileTypeByName(webFile);
     webFile.content = reader.result;
     webFile.initialized = true;
   }
@@ -67,15 +88,7 @@ export async function saveFile(fileHandle: FileSystemFileHandle, content: string
 }
 
 
-export type TypeFileExtName = 'md' | 'png' | 'jpg' | 'jpeg';
 
-const fileTypeMap: {
-  [key: string]: string;
-} = {
-  'md': 'text/plain',
-  'png': 'image/png',
-  'jpg': 'image/jpeg',
-}
 
 export async function createFileHandle(
   extname: TypeFileExtName,
@@ -95,12 +108,10 @@ export async function createFileHandle(
 async function parseWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
   if (webFile?.handle?.kind === 'file') {
     if (!webFile.content) {
-      const file = await webFile?.handle?.getFile();
-      const reader = await readFile(file);
-      webFile.fileType = file.type;
-      webFile.content = reader.result;
-      webFile.initialized = true;
-      webFile.pathList = [...(webFile.pathList || []), ...[webFile.handle.name]];
+      webFile = await initWebFile(webFile) as TypeWebFile;
+      if (webFile?.handle?.name) {
+        webFile.pathList = [...(webFile.pathList || []), ...[webFile.handle.name]];
+      }
     }
   } else if (webFile?.handle?.kind === 'directory') {
    

@@ -15,8 +15,6 @@ export type TypeHeaderProps = {
 export const headerHeight = 36;
 
 export function Header(props: TypeHeaderProps) {
-  console.log('re-render Header ...')
-
   const { store, dispatch } = useContext(Context);
 
   const onClickOpenFile = async () => {

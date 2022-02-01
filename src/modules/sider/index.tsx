@@ -44,7 +44,6 @@ function renderTree(webFile: TypeWebFile) {
 
 function RichObjectTreeView(props: { webFileList: TypeWebFile | null }) {
   const { webFileList } = props;
-  console.log('re-render RichObjectTreeView ...')
   return (
     <>
       {webFileList ? (
@@ -67,7 +66,6 @@ function RichObjectTreeView(props: { webFileList: TypeWebFile | null }) {
 
 export function Sider(props: TypeSiderProps) {
   const { store } = useContext(Context);
-  console.log('re-render Sider... ') 
 
   return (
     <div className={getCls('container')}>

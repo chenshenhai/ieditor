@@ -51,7 +51,7 @@ function IEditor(props: TypeIEditorProps) {
   const { className, defaultValue = '' } = props;
 
   return (
-    <Provider>
+    <Provider defaultValue={defaultValue}>
       <div
         className={classNames(
           createClassName(NAME), className
@@ -63,7 +63,7 @@ function IEditor(props: TypeIEditorProps) {
             <Header />
           </FlexRowItem>
           <FlexRowItem>
-            <Content defaultValue={defaultValue}/>
+            <Content defaultValue={defaultValue} />
           </FlexRowItem>
           <FlexRowItem height={footerHeight} className={getCls('footer')}>
             <Footer />

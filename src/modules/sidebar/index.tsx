@@ -22,7 +22,6 @@ const iconList: {
 ]
 
 export function SideBar(props: TypeSideBarProps) {
-  console.log('re-render SideBar ...')
   return (
     <div className={getCls('container')}>
       {iconList.map((item, i) => {

@@ -15,8 +15,6 @@ function createMarkup(html: string) {
 
 export function Preview(props: TypeLayoutProps) {
 
-  console.log('re-render Preview ...')
-
   const { markdown = '' } = props;
   const [html, setHtml] = useState<string>('');
 

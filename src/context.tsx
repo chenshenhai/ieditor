@@ -52,13 +52,24 @@ const reducer = (prevStore: TypeStore,
   }
 }
 
-export const Provider: React.FC = (props) => {
+
+export type TypeProviderProps = {
+  children?: React.ReactNode,
+  defaultValue?: string;
+}
+
+export const Provider = (props: TypeProviderProps) => {
+  const { children, defaultValue } = props;
+  if (typeof defaultValue === 'string' && defaultValue) {
+    initStore.currentWebFile.content = defaultValue;
+  }
+
   // @ts-ignore
   const [store, dispatch] = useReducer(reducer, initStore);
 
   return (
     <Context.Provider value={{store, dispatch}}>
-      {props.children}
+      {children}
     </Context.Provider>
   );
 };
