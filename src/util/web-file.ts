@@ -6,6 +6,7 @@ const fileTypeMap: {
   'md': 'text/plain',
   'png': 'image/png',
   'jpg': 'image/jpeg',
+  'jpeg': 'image/jpeg',
 }
 
 export type TypeWebFile = {
@@ -17,7 +18,7 @@ export type TypeWebFile = {
   type: 'file' | 'directory',
   origin: 'FileSystemAccess',
   content?: string | ArrayBuffer | null,
-  fileType?: string,
+  fileType?: (typeof fileTypeMap)[TypeFileExtName],
   handle?: FileSystemDirectoryHandle | FileSystemFileHandle,
 }
 

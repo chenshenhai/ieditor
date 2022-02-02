@@ -5,7 +5,7 @@ import { Button } from '../../components/ui';
 import { SideBar } from '../sidebar';
 import { eventHub } from '../../util/event';
 import {
-  TreeView, ExpandMoreIcon, ChevronRightIcon, FolderOpen, TreeItem
+  TreeView, ExpandMoreIcon, ChevronRightIcon, FolderOpenIcon, TreeItem
 } from '../../components/ui';
 import { TypeWebFile, initWebFile } from '../../util/web-file';
 import { Context } from '../../context';
@@ -41,12 +41,14 @@ function RichObjectTreeView(props: { webFileList: TypeWebFile | null }) {
   const { store, dispatch } = useContext(Context);
   const { webFileList } = props;
   const clickCallback = async (webFile: TypeWebFile) => {
-    webFile = await initWebFile(webFile);
-    store.currentWebFile = webFile;
-    dispatch({
-      type: 'updateCurrentWebFile',
-      payload: store,
-    })
+    if (webFile.type === 'file') {
+      webFile = await initWebFile(webFile);
+      store.currentWebFile = webFile;
+      dispatch({
+        type: 'updateCurrentWebFile',
+        payload: store,
+      });
+    }
   }
   return (
     <>
@@ -83,7 +85,7 @@ export function Sider(props: TypeSiderProps) {
         ) : (
           <div className={getCls('open-groups')} >
             <div className={getCls('empty-icon')}>
-              <FolderOpen fontSize='inherit' />
+              <FolderOpenIcon fontSize='inherit' />
             </div>
             <div className={getCls('open-item')} >
               <Button variant="outlined" disableRipple className={getCls('open-btn')}
