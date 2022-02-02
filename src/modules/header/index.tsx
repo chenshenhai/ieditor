@@ -32,17 +32,24 @@ export function Header(props: TypeHeaderProps) {
     // const currentWebFile = dispatchCurrentWebFile({name: 'get'});
     const content: string = eventHub.trigger('getEditValue', undefined)?.[0] || '';
     if (store?.currentWebFile?.handle && store?.currentWebFile?.handle instanceof FileSystemFileHandle) {
-      saveFile(store.currentWebFile.handle, content)
+      saveFile(store.currentWebFile, content)
     }
   }
 
   useEffect(() => {
-    eventHub.on('openFile', () => {
+    const openFile = () => {
       onClickOpenFile();
-    });
-    eventHub.on('openFolder', () => {
+    }
+    const openFolder = () => {
       onClickOpenFolder();
-    })
+    }
+    eventHub.on('openFile', openFile);
+    eventHub.on('openFolder', openFolder);
+
+    return () => {
+      eventHub.off('openFile', openFile);
+      eventHub.off('openFolder', openFolder);
+    }
   }, []);
 
   const onClickFile = async () => {

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { createClassNameFunc } from '../../util/name';
 
 const NAME = 'split-layout';
@@ -67,12 +67,6 @@ export function SplitLayout(props: TypeSplitLayoutProps) {
     }
     setLeftSize(newLeftSize);
   }
-
-  useEffect(() => {
-    window.addEventListener('message', (data) => {
-      console.log('data =', data);
-    })
-  }, []);
 
   return (
     <div className={getCls('container')}

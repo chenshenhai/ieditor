@@ -1,3 +1,5 @@
+import { imageBase64ToBlob } from './file';
+
 export type TypeFileExtName = 'md' | 'png' | 'jpg' | 'jpeg';
 
 const fileTypeMap: {
@@ -22,10 +24,18 @@ export type TypeWebFile = {
   handle?: FileSystemDirectoryHandle | FileSystemFileHandle,
 }
 
+function getFileExtName(name: string): string {
+  let extName: string = '';
+  if (typeof name === 'string' && name && name.indexOf('.') > 0) {
+    extName = name.substring(name.lastIndexOf('.') + 1);
+  }
+  return extName;
+}
+
 function getFileTypeByName(webFile: TypeWebFile): string {
   let fileType = '';
-  if (typeof webFile.name === 'string' && webFile.name && webFile.name.indexOf('.') > 0) {
-    const extName = webFile.name.substring(webFile.name.lastIndexOf('.') + 1);
+  if (typeof webFile.name === 'string' && webFile.name) {
+    const extName = getFileExtName(webFile.name);
     fileType = fileTypeMap[extName];
   }
   return fileType;
@@ -82,13 +92,21 @@ export async function openFolder(): Promise<TypeWebFile> {
   return webFile;
 }
 
-export async function saveFile(fileHandle: FileSystemFileHandle, content: string) {
-  const writable = await fileHandle.createWritable();
-  await writable.write(content);
-  await writable.close();
+export async function saveFile(webFile: TypeWebFile, content: string): Promise<boolean> {
+  if (webFile.handle instanceof FileSystemFileHandle) {
+    const fileHandle: FileSystemFileHandle = webFile.handle;
+    const writable = await fileHandle.createWritable();
+    let data: string | Blob = content;
+    if (webFile?.fileType?.startsWith('image/')) {
+      // @ts-ignore
+      data = imageBase64ToBlob(content || webFile.content);
+    }
+    await writable.write(data);
+    await writable.close();
+    return true;
+  }
+  return false;
 }
-
-
 
 
 export async function createFileHandle(
@@ -167,6 +185,11 @@ export function isMarkdownFile(webFile: TypeWebFile): boolean {
   }
   return false;
 }
+
+export function isSupportFile(webFile: TypeWebFile) {
+
+}
+
 
 
 

@@ -48,6 +48,9 @@ function RichObjectTreeView(props: { webFileList: TypeWebFile | null }) {
         type: 'updateCurrentWebFile',
         payload: store,
       });
+      if (typeof webFile.content === 'string') {
+        eventHub.trigger('setEditValue', webFile.content);
+      }
     }
   }
   return (
