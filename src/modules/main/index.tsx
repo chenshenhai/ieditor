@@ -16,13 +16,24 @@ export function Main(props: TypeIEditorProps) {
   const [markdown, setMarkdown] = useState<string>(store.currentWebFile.content || '');
   return (
     <div className={getCls('container')}>
-      {currentWebFile.fileType === 'text/plain' ? (
+      {/* {currentWebFile.fileType === 'text/plain' ? (
         <MdEditor />
       ) : (<>{
           currentWebFile?.fileType?.startsWith('image/') ? (
             <ImageEditor />
           ) : <Unsupported />
-        }</>)}
+        }</>)} */}
+
+      <MdEditor style={{
+        display: currentWebFile.fileType === 'text/plain' ? 'flex' : 'none',
+      }}/>
+      {currentWebFile.fileType !== 'text/plain' && (
+        <>{
+          currentWebFile?.fileType?.startsWith('image/') ? (
+            <ImageEditor />
+          ) : <Unsupported />
+        }</>
+      )}  
         
     </div>
   )

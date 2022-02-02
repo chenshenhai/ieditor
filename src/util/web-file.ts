@@ -93,7 +93,7 @@ export async function openFolder(): Promise<TypeWebFile> {
 }
 
 export async function saveFile(webFile: TypeWebFile, content: string): Promise<boolean> {
-  if (webFile.handle instanceof FileSystemFileHandle) {
+  if (isSupportedFile(webFile) && webFile.handle instanceof FileSystemFileHandle) {
     const fileHandle: FileSystemFileHandle = webFile.handle;
     const writable = await fileHandle.createWritable();
     let data: string | Blob = content;
@@ -186,8 +186,14 @@ export function isMarkdownFile(webFile: TypeWebFile): boolean {
   return false;
 }
 
-export function isSupportFile(webFile: TypeWebFile) {
-
+export function isSupportedFile(webFile: TypeWebFile) {
+  const extName = getFileExtName(webFile.name);
+  const fileType = fileTypeMap[extName];
+  if (typeof fileType === 'string' && fileType) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 

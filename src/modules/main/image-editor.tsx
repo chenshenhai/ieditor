@@ -14,6 +14,7 @@ export function ImageEditor() {
   return (
     <div className={getCls('image-editor')}>
       <img className={getCls('image')} src={src} />
+      {/* <div className={getCls('image-update')}></div> */}
     </div>
   )
 }

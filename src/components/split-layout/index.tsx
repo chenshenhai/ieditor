@@ -22,13 +22,15 @@ function parsePercents(num?: number): string[] {
 }
 
 export type TypeSplitLayoutProps = {
-  left: React.ReactNode;
-  right?: React.ReactNode;
-  leftSize?: number;
+  left: React.ReactNode,
+  right?: React.ReactNode,
+  leftSize?: number,
+  style?: React.CSSProperties,
 }
 
 
 export function SplitLayout(props: TypeSplitLayoutProps) {
+  const { style } = props;
   const _props = {...defaultProps, ...props};
   const { left, right } = _props;
   const [leftSize, setLeftSize] = useState<number>(_props.leftSize);
@@ -73,6 +75,7 @@ export function SplitLayout(props: TypeSplitLayoutProps) {
       onMouseUp={onDragEnd}
       onMouseMove={onDragMove}
       onMouseLeave={onDragEnd}
+      style={style}
       ref={refSplitLayout}
     >
       <div className={getCls('left')} style={{width: parsePercents(leftSize)[0]}}>

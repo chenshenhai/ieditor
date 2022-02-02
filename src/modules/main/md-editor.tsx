@@ -6,16 +6,19 @@ import { Context } from '../../context';
 // import { createClassName } from './../../util/name';
 // const NAME = 'main';
 
-export type TypeIEditorProps = {
+export type TypeMdEditorProps = {
   defaultValue?: string;
+  style?: React.CSSProperties,
 }
 
-export function MdEditor(props: TypeIEditorProps) {
+export function MdEditor(props: TypeMdEditorProps) {
+  const { style } = props;
   const { store } = useContext(Context);
   // @ts-ignore
   const [markdown, setMarkdown] = useState<string>(store.currentWebFile.content || '');
   return (
     <SplitLayout
+      style={style}
       left={
         <Edit
           // @ts-ignore

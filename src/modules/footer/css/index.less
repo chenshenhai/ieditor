@@ -1,8 +1,18 @@
 @footer-prefix: ~"@{prefix}-footer";
 
 .@{footer-prefix}-container {
-  display: block;
+  display: flex;
   width: 100%;
   border-top: 1px solid var(--ieditor-color-level-4);
   box-sizing: border-box;
+  font-size: 12px;
+  color: var(--ieditor-color-level-6);
+  padding: 0 40px;
+  align-items: center;
+
+  .@{footer-prefix}-text {
+    display: inline-block;
+    color: var(--ieditor-color-level-8);
+    padding: 0 6px;
+  }
 }
