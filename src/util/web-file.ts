@@ -53,6 +53,7 @@ export function createWebFile(type?: TypeWebFile['type']): TypeWebFile {
   }
 }
 
+
 export function createTempWebFileList(): TypeWebFile {
   const tempWebFileList: TypeWebFile = {
     id: '@temp',
@@ -65,7 +66,8 @@ export function createTempWebFileList(): TypeWebFile {
     children: []
   }
   const readme = createWebFile();
-  readme.id = 'README.md';
+  readme.pathList = [tempWebFileList.name, readme.name];
+  readme.id = readme.pathList.join('/');
   readme.name = 'README.md';
   readme.content = '# Temporary Files';
   readme.initialized = true;
@@ -162,11 +164,11 @@ async function parseWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
     }
     for await (let handle of webFile.handle.values()) {
       const tempPathList = [ ...[], ...webFile.pathList ];
-
+      const pathList = [...[], ...(tempPathList || []), ...[handle.name]]
       let _webFile: TypeWebFile = {
-        id: handle.name, // TODO
+        id: pathList.join('/'),
         name: handle.name,
-        pathList: [...[], ...(tempPathList || []), ...[handle.name]],
+        pathList: pathList,
         origin: 'FileSystemAccess',
         type: handle.kind,
         handle,

@@ -3,6 +3,7 @@
 type TypeEventArgMap  = {
   'setEditValue': string,
   'getEditValue': void,
+  'insertEditValue': any, // TODO
   'openFile': void,
   'openFolder': void,
   'importImage': void,
@@ -16,6 +17,7 @@ type TypeEventTriggerResult = {
   'openFolder': void,
   'importImage': void,
   'newFile': void,
+  'insertEditValue': any, // TODO
 }
   
 interface TypeEvent {

@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { createClassNameFunc } from '../../util/name';
 import { Button } from '../../components/ui';
 import { openFile, openFolder, saveFile, createFileHandle, createWebFile } from '../../util/web-file';
+import { createWebImageFile } from '../../util/web-image-file';
 import { Context } from '../../context';
 import { eventHub } from '../../util/event';
 import { pickFile, parseFileToBase64 } from '../../util/file';
@@ -17,7 +18,7 @@ export const headerHeight = 36;
 
 export function Header(props: TypeHeaderProps) {
   const { store, dispatch } = useContext(Context);
-
+  const { tempWebFileList } = store; 
   const onClickOpenFile = async () => {
     const webFile = await openFile();
     dispatch({ type: 'updateWebFileList', payload: { webFileList: webFile }})
@@ -61,13 +62,25 @@ export function Header(props: TypeHeaderProps) {
         const { file } = data;
         if (file) {
           const dataURL = await parseFileToBase64(file);
-          console.log('success: ', dataURL);
+          const webFile = createWebImageFile({
+            // @ts-ignore
+            fileType: file.type,
+            content: dataURL as string,
+          }, {
+            originPathList: tempWebFileList?.pathList
+          });
+          tempWebFileList?.children?.push(webFile);
+          dispatch({
+            type: 'updateTempWebFileList',
+            payload: { tempWebFileList }
+          });
+          eventHub.trigger('insertEditValue', `![image](${webFile.id})`);
         }
       },
       error: (data) => {
         console.log('error: ', data);
       },
-    })
+    });
   }
 
   useEffect(() => {

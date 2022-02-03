@@ -34,23 +34,28 @@ const reducer = (prevStore: TypeStore,
 ) => {
   const { type, payload } = action;
   switch(type) {
-    default:
-      return prevStore;
-      case 'updateCurrentWebFile':
-        return {
-          ...prevStore,
-          currentWebFile: payload?.currentWebFile,
-        };
-      case 'updateWebFileList':
-        return {
-          ...prevStore,
-          webFileList: payload?.webFileList,
-        };
+    case 'updateCurrentWebFile':
+      return {
+        ...prevStore,
+        currentWebFile: payload?.currentWebFile,
+      };
+    case 'updateWebFileList':
+      return {
+        ...prevStore,
+        webFileList: payload?.webFileList,
+      };
+    case 'updateTempWebFileList':
+      return {
+        ...prevStore,
+        tempWebFileList: payload?.tempWebFileList,
+      };
     case 'reset':
       return {
         ...prevStore,
         ...payload,
       };
+    default:
+      return prevStore;
   }
 }
 

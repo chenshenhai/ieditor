@@ -7,13 +7,16 @@ import { Context } from '../../context';
 // const NAME = 'main';
 
 export type TypeMdEditorProps = {
+  visible?: boolean,
   defaultValue?: string;
   style?: React.CSSProperties,
 }
 
 export function MdEditor(props: TypeMdEditorProps) {
-  const { style } = props;
+  const { style = {}, visible } = props;
   const { store } = useContext(Context);
+  style.display = visible === true ? 'flex' : 'none';
+
   // @ts-ignore
   const [markdown, setMarkdown] = useState<string>(store.currentWebFile.content || '');
   return (

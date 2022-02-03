@@ -37,7 +37,6 @@ export function Edit(props: TypeLayoutProps) {
     })
   }, []);
 
-  
 
   useEffect(() => {
     const setEditValue = (value: string) => {
@@ -73,6 +72,10 @@ export function Edit(props: TypeLayoutProps) {
       })
       eventHub.on('setEditValue', setEditValue);
       eventHub.on('getEditValue', getEditValue);
+      eventHub.on('insertEditValue', (data) => {
+        editor.replaceSelection(data)
+      })
+      // editor.setSelection('')
     }
 
     return () => {
