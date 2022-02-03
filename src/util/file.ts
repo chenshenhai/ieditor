@@ -16,10 +16,14 @@ export function imageBase64ToBlob(dataURL: string) {
 export function pickFile (opts: {
   success: (data: { file?: File }) => void;
   error?: (err: ErrorEvent) => void;
+  accept?: string,
 }) {
-  const { success, error } = opts;
+  const { success, error, accept } = opts;
   let input: HTMLInputElement | null = document.createElement('input');
   input.type = 'file';
+  if (typeof accept === 'string' && accept) {
+    input.accept = accept
+  }
   input.addEventListener('change', function() {
     const file: File | undefined = this?.files?.[0];
     success({
@@ -35,6 +39,8 @@ export function pickFile (opts: {
   })
   input.click();
 }
+
+
 
 export function parseFileToBase64(file: File): Promise<string | ArrayBuffer | null> {
   return new Promise(function(resolve, reject) {

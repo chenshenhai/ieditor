@@ -4,6 +4,7 @@ import { Button } from '../../components/ui';
 import { openFile, openFolder, saveFile, createFileHandle, createWebFile } from '../../util/web-file';
 import { Context } from '../../context';
 import { eventHub } from '../../util/event';
+import { pickFile, parseFileToBase64 } from '../../util/file';
 
 const NAME = 'header';
 const getCls = createClassNameFunc(NAME);
@@ -53,6 +54,22 @@ export function Header(props: TypeHeaderProps) {
     eventHub.trigger('setEditValue', webFile.content)
   }
 
+  const onClickImportImage = async () => {
+    pickFile({
+      accept: 'image/*',
+      success: async (data) => {
+        const { file } = data;
+        if (file) {
+          const dataURL = await parseFileToBase64(file);
+          console.log('success: ', dataURL);
+        }
+      },
+      error: (data) => {
+        console.log('error: ', data);
+      },
+    })
+  }
+
   useEffect(() => {
     const openFile = () => {
       onClickOpenFile();
@@ -63,13 +80,18 @@ export function Header(props: TypeHeaderProps) {
     const newFile = () => {
       onClickNewFile();
     }
+    const importImage = () => {
+      onClickImportImage();
+    }
     eventHub.on('openFile', openFile);
     eventHub.on('openFolder', openFolder);
+    eventHub.on('importImage', importImage);
     eventHub.on('newFile', newFile);
 
     return () => {
       eventHub.off('openFile', openFile);
       eventHub.off('openFolder', openFolder);
+      eventHub.on('importImage', importImage);
       eventHub.off('newFile', newFile);
     }
   }, []);
@@ -83,6 +105,7 @@ export function Header(props: TypeHeaderProps) {
       <Button className={getCls('btn')} onClick={onClickNewFile}>New File</Button>
       <Button className={getCls('btn')} onClick={onClickOpenFile}>Open File</Button>
       <Button className={getCls('btn')} onClick={onClickOpenFolder}>Open Folder</Button>
+      <Button className={getCls('btn')} onClick={onClickImportImage}>Import Image</Button>
       <Button className={getCls('btn')} onClick={onClickSave}>Save</Button>
     </div>
   )

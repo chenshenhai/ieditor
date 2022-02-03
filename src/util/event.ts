@@ -5,6 +5,7 @@ type TypeEventArgMap  = {
   'getEditValue': void,
   'openFile': void,
   'openFolder': void,
+  'importImage': void,
   'newFile': void,
 }
 
@@ -13,6 +14,7 @@ type TypeEventTriggerResult = {
   'getEditValue': string,
   'openFile': void,
   'openFolder': void,
+  'importImage': void,
   'newFile': void,
 }
   
