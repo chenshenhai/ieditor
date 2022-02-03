@@ -36,18 +36,21 @@ export function Header(props: TypeHeaderProps) {
     }
   }
 
-  const onClickFile = async () => {
-    // TODO
-  }
-
-  const onClickNew = async () => {
-    // TODO
+  const onClickNewFile = async () => {
     const handle = await createFileHandle('md');
     const webFile = createWebFile();
+    const defaultContent = '# Hello World';
+    webFile.name = handle?.name || 'index.md';
+    webFile.id = webFile.name;
+    webFile.initialized = true;
+    webFile.content = defaultContent;
+    webFile.pathList = [webFile.name]
     if (handle) {
       webFile.handle = handle;
     }
-    console.log('webFile ===', webFile);
+    dispatch({ type: 'updateWebFileList', payload: { webFileList: webFile }})
+    dispatch({ type: 'updateCurrentWebFile', payload: { currentWebFile: webFile }})
+    eventHub.trigger('setEditValue', webFile.content)
   }
 
   useEffect(() => {
@@ -57,12 +60,17 @@ export function Header(props: TypeHeaderProps) {
     const openFolder = () => {
       onClickOpenFolder();
     }
+    const newFile = () => {
+      onClickNewFile();
+    }
     eventHub.on('openFile', openFile);
     eventHub.on('openFolder', openFolder);
+    eventHub.on('newFile', newFile);
 
     return () => {
       eventHub.off('openFile', openFile);
       eventHub.off('openFolder', openFolder);
+      eventHub.off('newFile', newFile);
     }
   }, []);
 
@@ -72,8 +80,7 @@ export function Header(props: TypeHeaderProps) {
       style={{
         height: headerHeight,
       }}>
-      <Button className={getCls('btn')} onClick={onClickFile}>File</Button>
-      <Button className={getCls('btn')} onClick={onClickNew}>New</Button>
+      <Button className={getCls('btn')} onClick={onClickNewFile}>New File</Button>
       <Button className={getCls('btn')} onClick={onClickOpenFile}>Open File</Button>
       <Button className={getCls('btn')} onClick={onClickOpenFolder}>Open Folder</Button>
       <Button className={getCls('btn')} onClick={onClickSave}>Save</Button>

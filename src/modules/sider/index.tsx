@@ -112,6 +112,13 @@ export function Sider(props: TypeSiderProps) {
             <div className={getCls('open-item')} >
               <Button variant="outlined" disableRipple className={getCls('open-btn')}
                 onClick={() => {
+                  eventHub.trigger('newFile', undefined);
+                }}
+              >New File</Button>
+            </div>
+            <div className={getCls('open-item')} >
+              <Button variant="outlined" disableRipple className={getCls('open-btn')}
+                onClick={() => {
                   eventHub.trigger('openFile', undefined);
                 }}
               >Open File</Button>

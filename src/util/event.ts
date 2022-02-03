@@ -5,6 +5,7 @@ type TypeEventArgMap  = {
   'getEditValue': void,
   'openFile': void,
   'openFolder': void,
+  'newFile': void,
 }
 
 type TypeEventTriggerResult = {
@@ -12,6 +13,7 @@ type TypeEventTriggerResult = {
   'getEditValue': string,
   'openFile': void,
   'openFolder': void,
+  'newFile': void,
 }
   
 interface TypeEvent {

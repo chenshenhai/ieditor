@@ -15,6 +15,7 @@ export function Footer(props: TypeFooterProps) {
   const { store } = useContext(Context);
   const { currentWebFile } = store;
   const pathName = currentWebFile.pathList.join('/');
+
   return (
     <div
       className={getCls('container')}

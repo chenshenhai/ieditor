@@ -54,23 +54,24 @@ export function createWebFile(type?: TypeWebFile['type']): TypeWebFile {
 }
 
 export function createTempWebFileList(): TypeWebFile {
-  const readme = createWebFile();
-  readme.id = 'README.md';
-  readme.name = 'README.md';
-  readme.content = '# Hello World';
-  readme.initialized = true;
-  return {
+  const tempWebFileList: TypeWebFile = {
     id: '@temp',
     name: '@temp',
-    pathList: [],
+    pathList: ['@temp'],
     fileType: '',
     initialized: true,
     type: 'directory',
     origin: 'IEditorTemp',
-    children: [
-      readme,
-    ]
+    children: []
   }
+  const readme = createWebFile();
+  readme.id = 'README.md';
+  readme.name = 'README.md';
+  readme.content = '# Temporary Files';
+  readme.initialized = true;
+  readme.pathList = [tempWebFileList.name, readme.name];
+  tempWebFileList?.children?.push(readme);
+  return tempWebFileList;
 }
 
 
