@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { createClassNameFunc } from '../../util/name';
 import { Button } from '../../components/ui';
-import { openFile, openFolder, saveFile } from '../../util/web-file';
+import { openFile, openFolder, saveFile, createFileHandle, createWebFile } from '../../util/web-file';
 import { Context } from '../../context';
 import { eventHub } from '../../util/event';
 
@@ -36,6 +36,20 @@ export function Header(props: TypeHeaderProps) {
     }
   }
 
+  const onClickFile = async () => {
+    // TODO
+  }
+
+  const onClickNew = async () => {
+    // TODO
+    const handle = await createFileHandle('md');
+    const webFile = createWebFile();
+    if (handle) {
+      webFile.handle = handle;
+    }
+    console.log('webFile ===', webFile);
+  }
+
   useEffect(() => {
     const openFile = () => {
       onClickOpenFile();
@@ -52,10 +66,6 @@ export function Header(props: TypeHeaderProps) {
     }
   }, []);
 
-  const onClickFile = async () => {
-
-  }
-
   return (
     <div
       className={getCls('container')}
@@ -63,6 +73,7 @@ export function Header(props: TypeHeaderProps) {
         height: headerHeight,
       }}>
       <Button className={getCls('btn')} onClick={onClickFile}>File</Button>
+      <Button className={getCls('btn')} onClick={onClickNew}>New</Button>
       <Button className={getCls('btn')} onClick={onClickOpenFile}>Open File</Button>
       <Button className={getCls('btn')} onClick={onClickOpenFolder}>Open Folder</Button>
       <Button className={getCls('btn')} onClick={onClickSave}>Save</Button>

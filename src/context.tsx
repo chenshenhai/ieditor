@@ -1,9 +1,10 @@
 import React, { createContext, Dispatch, useReducer } from 'react';
-import { TypeWebFile, createWebFile } from './util/web-file';
+import { TypeWebFile, createWebFile, createTempWebFileList, } from './util/web-file';
 
 type TypeStore = {
   currentWebFile: TypeWebFile,
   webFileList: TypeWebFile | null,
+  tempWebFileList: TypeWebFile | null,
 }
 
 type TypeContext = {
@@ -17,6 +18,7 @@ type TypeContext = {
 const initStore: TypeStore = {
   currentWebFile: createWebFile(),
   webFileList: null,
+  tempWebFileList: createTempWebFileList(),
 }
 
 export const Context = createContext<TypeContext>({

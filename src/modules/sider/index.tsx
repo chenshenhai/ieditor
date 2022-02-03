@@ -72,6 +72,22 @@ function RichObjectTreeView(props: { webFileList: TypeWebFile | null }) {
   );
 }
 
+export function FileMenu(props: {
+  webFileList: TypeWebFile | null,
+  tempWebFileList: TypeWebFile | null,
+}) {
+  const { webFileList, tempWebFileList } = props;
+  return (
+    <div className={getCls('file-menu')}>
+      <div className={getCls('file-menu-item')}>
+        <RichObjectTreeView webFileList={webFileList} />
+      </div>
+      <div className={getCls('file-menu-item')}>
+        <RichObjectTreeView webFileList={tempWebFileList} />
+      </div>
+    </div>
+  )
+}
 
 export function Sider(props: TypeSiderProps) {
   const { store } = useContext(Context);
@@ -84,7 +100,10 @@ export function Sider(props: TypeSiderProps) {
         </FlexColumItem>
         <FlexColumItem className={getCls('file-tree')}>
         {store.webFileList ? (
-          <RichObjectTreeView webFileList={store.webFileList} />
+          <FileMenu
+            webFileList={store.webFileList}
+            tempWebFileList={store.tempWebFileList}
+          />
         ) : (
           <div className={getCls('open-groups')} >
             <div className={getCls('empty-icon')}>

@@ -18,7 +18,7 @@ export type TypeWebFile = {
   pathList: string[],
   initialized: boolean,
   type: 'file' | 'directory',
-  origin: 'FileSystemAccess',
+  origin: 'FileSystemAccess' | 'IEditorTemp',
   content?: string | ArrayBuffer | null,
   fileType?: (typeof fileTypeMap)[TypeFileExtName],
   handle?: FileSystemDirectoryHandle | FileSystemFileHandle,
@@ -52,6 +52,28 @@ export function createWebFile(type?: TypeWebFile['type']): TypeWebFile {
     origin: 'FileSystemAccess',
   }
 }
+
+export function createTempWebFileList(): TypeWebFile {
+  const readme = createWebFile();
+  readme.id = 'README.md';
+  readme.name = 'README.md';
+  readme.content = '# Hello World';
+  readme.initialized = true;
+  return {
+    id: '@temp',
+    name: '@temp',
+    pathList: [],
+    fileType: '',
+    initialized: true,
+    type: 'directory',
+    origin: 'IEditorTemp',
+    children: [
+      readme,
+    ]
+  }
+}
+
+
 
 export async function initWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
   if (webFile.initialized !== true && webFile?.handle?.kind === 'file') {
