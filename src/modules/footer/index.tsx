@@ -1,5 +1,6 @@
-import React from 'react';
-import { createClassNameFunc } from '../../util/name'
+import React, { useContext } from 'react';
+import { createClassNameFunc } from '../../util/name';
+import { Context } from '../../context';
 
 const NAME = 'footer';
 const getCls = createClassNameFunc(NAME);
@@ -11,7 +12,10 @@ export type TypeFooterProps = {
 export const footerHeight = 30;
 
 export function Footer(props: TypeFooterProps) {
-  console.log('re-render Footer...')
+  const { store } = useContext(Context);
+  const { currentWebFile } = store;
+  const pathName = currentWebFile.pathList.join('/');
+
   return (
     <div
       className={getCls('container')}
@@ -19,7 +23,8 @@ export function Footer(props: TypeFooterProps) {
         height: footerHeight,
       }}
     >
-      Footer
+      <span>Path: </span>
+      <span className={getCls('text')}>{pathName || '#'}</span>
     </div>
   )
 }

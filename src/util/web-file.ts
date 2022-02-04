@@ -1,3 +1,16 @@
+import { imageBase64ToBlob } from './file';
+
+export type TypeFileExtName = 'md' | 'png' | 'jpg' | 'jpeg';
+
+const fileTypeMap: {
+  [key: string]: string;
+} = {
+  'md': 'text/plain',
+  'png': 'image/png',
+  'jpg': 'image/jpeg',
+  'jpeg': 'image/jpeg',
+}
+
 export type TypeWebFile = {
   id: string,
   name: string,
@@ -5,10 +18,27 @@ export type TypeWebFile = {
   pathList: string[],
   initialized: boolean,
   type: 'file' | 'directory',
-  origin: 'FileSystemAccess',
+  origin: 'FileSystemAccess' | 'IEditorTemp',
   content?: string | ArrayBuffer | null,
-  fileType?: string,
+  fileType?: (typeof fileTypeMap)[TypeFileExtName],
   handle?: FileSystemDirectoryHandle | FileSystemFileHandle,
+}
+
+function getFileExtName(name: string): string {
+  let extName: string = '';
+  if (typeof name === 'string' && name && name.indexOf('.') > 0) {
+    extName = name.substring(name.lastIndexOf('.') + 1);
+  }
+  return extName;
+}
+
+function getFileTypeByName(webFile: TypeWebFile): string {
+  let fileType = '';
+  if (typeof webFile.name === 'string' && webFile.name) {
+    const extName = getFileExtName(webFile.name);
+    fileType = fileTypeMap[extName];
+  }
+  return fileType;
 }
 
 export function createWebFile(type?: TypeWebFile['type']): TypeWebFile {
@@ -16,16 +46,43 @@ export function createWebFile(type?: TypeWebFile['type']): TypeWebFile {
     id: '',
     name: '',
     pathList: [],
+    fileType: fileTypeMap['md'],
     initialized: false,
     type: type || 'file',
     origin: 'FileSystemAccess',
   }
 }
 
-export async function initWebFile(webFile: TypeWebFile) {
+
+export function createTempWebFileList(): TypeWebFile {
+  const tempWebFileList: TypeWebFile = {
+    id: '@temp',
+    name: '@temp',
+    pathList: ['@temp'],
+    fileType: '',
+    initialized: true,
+    type: 'directory',
+    origin: 'IEditorTemp',
+    children: []
+  }
+  const readme = createWebFile();
+  readme.pathList = [tempWebFileList.name, readme.name];
+  readme.id = readme.pathList.join('/');
+  readme.name = 'README.md';
+  readme.content = '# Temporary Files';
+  readme.initialized = true;
+  readme.pathList = [tempWebFileList.name, readme.name];
+  tempWebFileList?.children?.push(readme);
+  return tempWebFileList;
+}
+
+
+
+export async function initWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
   if (webFile.initialized !== true && webFile?.handle?.kind === 'file') {
     const file = await webFile?.handle?.getFile();
     const reader = await readFile(file);
+    webFile.fileType = file.type || getFileTypeByName(webFile);
     webFile.content = reader.result;
     webFile.initialized = true;
   }
@@ -60,22 +117,22 @@ export async function openFolder(): Promise<TypeWebFile> {
   return webFile;
 }
 
-export async function saveFile(fileHandle: FileSystemFileHandle, content: string) {
-  const writable = await fileHandle.createWritable();
-  await writable.write(content);
-  await writable.close();
+export async function saveFile(webFile: TypeWebFile, content: string): Promise<boolean> {
+  if (isSupportedFile(webFile) && webFile.handle instanceof FileSystemFileHandle) {
+    const fileHandle: FileSystemFileHandle = webFile.handle;
+    const writable = await fileHandle.createWritable();
+    let data: string | Blob = content;
+    if (webFile?.fileType?.startsWith('image/')) {
+      // @ts-ignore
+      data = imageBase64ToBlob(content || webFile.content);
+    }
+    await writable.write(data);
+    await writable.close();
+    return true;
+  }
+  return false;
 }
 
-
-export type TypeFileExtName = 'md' | 'png' | 'jpg' | 'jpeg';
-
-const fileTypeMap: {
-  [key: string]: string;
-} = {
-  'md': 'text/plain',
-  'png': 'image/png',
-  'jpg': 'image/jpeg',
-}
 
 export async function createFileHandle(
   extname: TypeFileExtName,
@@ -95,12 +152,10 @@ export async function createFileHandle(
 async function parseWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
   if (webFile?.handle?.kind === 'file') {
     if (!webFile.content) {
-      const file = await webFile?.handle?.getFile();
-      const reader = await readFile(file);
-      webFile.fileType = file.type;
-      webFile.content = reader.result;
-      webFile.initialized = true;
-      webFile.pathList = [...(webFile.pathList || []), ...[webFile.handle.name]];
+      webFile = await initWebFile(webFile) as TypeWebFile;
+      if (webFile?.handle?.name) {
+        webFile.pathList = [...(webFile.pathList || []), ...[webFile.handle.name]];
+      }
     }
   } else if (webFile?.handle?.kind === 'directory') {
    
@@ -109,11 +164,11 @@ async function parseWebFile(webFile: TypeWebFile): Promise<TypeWebFile> {
     }
     for await (let handle of webFile.handle.values()) {
       const tempPathList = [ ...[], ...webFile.pathList ];
-
+      const pathList = [...[], ...(tempPathList || []), ...[handle.name]]
       let _webFile: TypeWebFile = {
-        id: handle.name, // TODO
+        id: pathList.join('/'),
         name: handle.name,
-        pathList: [...[], ...(tempPathList || []), ...[handle.name]],
+        pathList: pathList,
         origin: 'FileSystemAccess',
         type: handle.kind,
         handle,
@@ -155,6 +210,17 @@ export function isMarkdownFile(webFile: TypeWebFile): boolean {
   }
   return false;
 }
+
+export function isSupportedFile(webFile: TypeWebFile) {
+  const extName = getFileExtName(webFile.name);
+  const fileType = fileTypeMap[extName];
+  if (typeof fileType === 'string' && fileType) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 
 
 

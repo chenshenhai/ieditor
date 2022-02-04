@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { createClassNameFunc } from '../../util/name';
 
 const NAME = 'split-layout';
@@ -21,18 +21,20 @@ function parsePercents(num?: number): string[] {
   ]
 }
 
-export type TypeLayoutProps = {
-  left: React.ReactNode;
-  right?: React.ReactNode;
-  leftSize?: number;
+export type TypeSplitLayoutProps = {
+  left: React.ReactNode,
+  right?: React.ReactNode,
+  leftSize?: number,
+  style?: React.CSSProperties,
 }
 
 
-export function Layout(props: TypeLayoutProps) {
+export function SplitLayout(props: TypeSplitLayoutProps) {
+  const { style } = props;
   const _props = {...defaultProps, ...props};
   const { left, right } = _props;
   const [leftSize, setLeftSize] = useState<number>(_props.leftSize);
-  const refLayout: React.LegacyRef<HTMLDivElement> = useRef(null)
+  const refSplitLayout: React.LegacyRef<HTMLDivElement> = useRef(null)
   const isDragging = useRef<boolean>(false);
   const prevDragPosition = useRef<number>(-1);
 
@@ -53,7 +55,7 @@ export function Layout(props: TypeLayoutProps) {
     if (!(e.pageX > 0 && prevDragPosition.current > 0)) {
       return;
     }
-    const layoutWidth = refLayout?.current?.offsetWidth;
+    const layoutWidth = refSplitLayout?.current?.offsetWidth;
     if (!(layoutWidth && layoutWidth > 0)) {
       return
     }
@@ -68,18 +70,13 @@ export function Layout(props: TypeLayoutProps) {
     setLeftSize(newLeftSize);
   }
 
-  useEffect(() => {
-    window.addEventListener('message', (data) => {
-      console.log('data =', data);
-    })
-  }, []);
-
   return (
     <div className={getCls('container')}
       onMouseUp={onDragEnd}
       onMouseMove={onDragMove}
       onMouseLeave={onDragEnd}
-      ref={refLayout}
+      style={style}
+      ref={refSplitLayout}
     >
       <div className={getCls('left')} style={{width: parsePercents(leftSize)[0]}}>
         {left}

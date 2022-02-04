@@ -39,6 +39,13 @@ export function Edit(props: TypeLayoutProps) {
 
 
   useEffect(() => {
+    const setEditValue = (value: string) => {
+      refEditor?.current?.setValue(value);
+    }
+    const getEditValue = () => {
+      return refEditor?.current?.getValue();
+    }
+    
     if (ref && ref.current) {
       const editor: CodeMirror.Editor = CodeMirror(ref.current, {
         value: getFileContent(store.currentWebFile),
@@ -58,20 +65,21 @@ export function Edit(props: TypeLayoutProps) {
         if (typeof onChange === 'function') {
           const value = editor.getValue();
           onChange({ value })
+          // refEditor?.current?.setValue(value);
+          eventHub.trigger('setPreviewValue', value);
         }
         // editor.getValue()
       })
-      // // editor.setOption('mode', '');
-      // // window.addEventListener('resize',() => {
-      // //   editor.refresh()
-      // // })
+      eventHub.on('setEditValue', setEditValue);
+      eventHub.on('getEditValue', getEditValue);
+      eventHub.on('insertEditValue', (data) => {
+        editor.replaceSelection(data)
+      })
+    }
 
-      eventHub.on('setEditValue', (value: string) => {
-        editor.setValue(value);
-      });
-      eventHub.on('getEditValue', () => {
-        return editor.getValue();
-      });
+    return () => {
+      eventHub.off('setEditValue', setEditValue);
+      eventHub.off('getEditValue', getEditValue);
     }
     
   }, []);

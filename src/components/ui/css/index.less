@@ -1,1 +1,50 @@
-@import './button.less';
+@import 'antd/es/button/style/index.less';
+@import 'antd/es/tree/style/index.less';
+
+
+@ui-prefix: ~"@{prefix}-ui";
+
+
+.@{prefix}-wrapper {
+
+  .@{ui-prefix}-btn {
+    text-transform: none;
+    font-size: 14px;
+    color: var(--ieditor-color-level-6);
+    // border-color: var(--ieditor-color-level-6);
+    border-color: transparent;
+  
+    &:active {
+      color: var(--ieditor-color-level-6);
+    }
+  
+    &:hover {
+      background-color: var(--ieditor-color-level-3);
+      color: var(--ieditor-color-level-7);
+      // border-color: var(--ieditor-color-level-6);
+      border-color: transparent;
+    }
+  }
+  
+  .@{ui-prefix}-tree {
+    // background-color: transparent;
+    // background-color: #999999;
+    width: 100%;
+  
+    .@{ui-prefix}-tree-treenode {
+      width: 100%;
+    }
+  
+    .@{ui-prefix}-tree-node-content-wrapper {
+      width: 100%;
+    }
+  
+    .@{ui-prefix}-tree-switcher {
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+  }
+  
+}
+

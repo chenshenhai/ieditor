@@ -1,7 +1,6 @@
 import React from 'react';
 import { createClassNameFunc } from '../../util/name';
-import IconFile from '@mui/icons-material/InsertDriveFileOutlined';
-import IconSearch from '@mui/icons-material/FindInPageOutlined';
+import { IconMarkdown, IconSearch } from '../../components/ui';
 
 const NAME = 'sidebar';
 const getCls = createClassNameFunc(NAME);
@@ -14,7 +13,7 @@ const iconList: {
   icon: React.ReactNode,
 }[] = [
   {
-    icon: <IconFile />,
+    icon: <IconMarkdown />,
   },
   {
     icon: <IconSearch />,
@@ -22,7 +21,6 @@ const iconList: {
 ]
 
 export function SideBar(props: TypeSideBarProps) {
-  console.log('re-render SideBar ...')
   return (
     <div className={getCls('container')}>
       {iconList.map((item, i) => {
