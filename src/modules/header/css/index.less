@@ -3,10 +3,14 @@
 .@{header-prefix}-container {
   display: block;
   width: 100%;
-  border-bottom: 1px solid var(--ieditor-color-level-4);
+  // border-bottom: 1px solid var(--ieditor-color-level-4);
+  border-bottom: 1px solid transparent;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
 
   .@{header-prefix}-btn {
     text-transform: none;
+    border-color: transparent;
   }
 }

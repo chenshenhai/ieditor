@@ -40,8 +40,8 @@ export function FileTree(props: { webFileList: TypeWebFile | null }) {
   const data: any = _parseData(webFileList);
 
   const onSelect = async (selectedKeys: any[], info: any) => {
-    console.log('info =', info.node.webFile);
-    let webFile = info?.node?.webFile as TypeWebFile;
+    const { node } = info || {};
+    let webFile = node?.webFile as TypeWebFile;
     if (webFile.type === 'file') {
       webFile = await initWebFile(webFile);
       store.currentWebFile = webFile;
@@ -56,6 +56,7 @@ export function FileTree(props: { webFileList: TypeWebFile | null }) {
   }
 
   return (<Tree
+    style={{width: '100%'}}
     onSelect={onSelect}
     treeData={[data]}
   />)

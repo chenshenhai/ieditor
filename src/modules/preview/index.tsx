@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { marked } from 'marked';
-import { createClassNameFunc } from '../../util/name'
+import { createClassNameFunc } from '../../util/name';
+import { eventHub } from '../../util/event';
 
 const NAME = 'preview';
 const getCls = createClassNameFunc(NAME);
@@ -17,10 +18,29 @@ export function Preview(props: TypeLayoutProps) {
 
   const { markdown = '' } = props;
   const [html, setHtml] = useState<string>('');
+  const refHtml = useRef<string>('');
 
   useEffect(() => {
-    const newHtml = marked.parse(markdown);
-    setHtml(newHtml);
+
+    const setPreviewValue = (value: string) => {
+      const newHtml = marked.parse(value);
+      refHtml.current = newHtml;
+      setHtml(newHtml);
+    }
+
+    const getPreviewValue = () => {
+      return refHtml.current;
+    }
+
+    setPreviewValue(markdown)
+
+    eventHub.on('setPreviewValue', setPreviewValue);
+    eventHub.on('getPreviewValue', getPreviewValue);
+
+    return () => {
+      eventHub.off('setPreviewValue', setPreviewValue);
+      eventHub.off('getPreviewValue', getPreviewValue);
+    }
   }, [markdown]);
 
   return (

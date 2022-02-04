@@ -40,9 +40,7 @@ export function Edit(props: TypeLayoutProps) {
 
   useEffect(() => {
     const setEditValue = (value: string) => {
-      if (isMarkdownFile(store.currentWebFile)) {
-        refEditor?.current?.setValue(value);
-      }
+      refEditor?.current?.setValue(value);
     }
     const getEditValue = () => {
       return refEditor?.current?.getValue();
@@ -67,6 +65,8 @@ export function Edit(props: TypeLayoutProps) {
         if (typeof onChange === 'function') {
           const value = editor.getValue();
           onChange({ value })
+          // refEditor?.current?.setValue(value);
+          eventHub.trigger('setPreviewValue', value);
         }
         // editor.getValue()
       })
@@ -75,7 +75,6 @@ export function Edit(props: TypeLayoutProps) {
       eventHub.on('insertEditValue', (data) => {
         editor.replaceSelection(data)
       })
-      // editor.setSelection('')
     }
 
     return () => {

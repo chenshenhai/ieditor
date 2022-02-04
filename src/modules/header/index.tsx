@@ -83,6 +83,11 @@ export function Header(props: TypeHeaderProps) {
     });
   }
 
+  const onClickExport = async () => {
+    const html = eventHub.trigger('getPreviewValue', undefined);
+    console.log('html =====', html);
+  }
+
   useEffect(() => {
     const openFile = () => {
       onClickOpenFile();
@@ -120,6 +125,7 @@ export function Header(props: TypeHeaderProps) {
       <Button className={getCls('btn')} onClick={onClickOpenFolder}>Open Folder</Button>
       <Button className={getCls('btn')} onClick={onClickImportImage}>Import Image</Button>
       <Button className={getCls('btn')} onClick={onClickSave}>Save</Button>
+      <Button className={getCls('btn')} onClick={onClickExport}>Export</Button>
     </div>
   )
 }
