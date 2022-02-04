@@ -6,6 +6,7 @@ import { Content } from './modules/content';
 import { Header, headerHeight } from './modules/header';
 import { Footer, footerHeight } from './modules/footer';
 import { Provider } from './context';
+import { ConfigProvider } from './components/ui';
 // import { eventHub } from './util/event';
 
 const NAME = 'wrapper';
@@ -51,26 +52,28 @@ function IEditor(props: TypeIEditorProps) {
   const { className, defaultValue = '' } = props;
 
   return (
-    <Provider defaultValue={defaultValue}>
-      <div
-        className={classNames(
-          createClassName(NAME), className
-        )}
-        style={getStyle(props)}
-      >
-        <FlexRows>
-          <FlexRowItem height={headerHeight} className={getCls('header')}>
-            <Header />
-          </FlexRowItem>
-          <FlexRowItem>
-            <Content defaultValue={defaultValue} />
-          </FlexRowItem>
-          <FlexRowItem height={footerHeight} className={getCls('footer')}>
-            <Footer />
-          </FlexRowItem>
-        </FlexRows>
-      </div>
-    </Provider>
+    <ConfigProvider prefixCls='ieditor-ui'>
+      <Provider defaultValue={defaultValue}>
+        <div
+          className={classNames(
+            createClassName(NAME), className
+          )}
+          style={getStyle(props)}
+        >
+          <FlexRows>
+            <FlexRowItem height={headerHeight} className={getCls('header')}>
+              <Header />
+            </FlexRowItem>
+            <FlexRowItem>
+              <Content defaultValue={defaultValue} />
+            </FlexRowItem>
+            <FlexRowItem height={footerHeight} className={getCls('footer')}>
+              <Footer />
+            </FlexRowItem>
+          </FlexRows>
+        </div>
+      </Provider>
+    </ConfigProvider>
   )
 }
 

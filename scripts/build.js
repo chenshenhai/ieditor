@@ -4,6 +4,7 @@ const ts = require('typescript');
 const babel = require('@babel/core');
 const glob = require('glob');
 const less = require('less');
+const { lessOptions } = require('./config');
 
 build();
 
@@ -106,18 +107,20 @@ function buildTS() {
 async function buildLess() {
   const lessPath = resolve('src', 'index.less');
   const lessInput = fs.readFileSync(lessPath, { encoding: 'utf8' })
-  const { css } = await less.render(lessInput, {
-    filename: lessPath,
-  });
+  const opts = {
+    ...{filename: lessPath,},
+    ...lessOptions
+  }
+  const { css } = await less.render(lessInput, opts);
   write(resolve('dist', 'css', 'index.css'), css);
 
-  const pattern = '**/*.less';
-  const cwd = resolve('src');
-  const files = glob.sync(pattern, { cwd, });
-  files.forEach((file) => {
-    const css = fs.readFileSync(resolve('src', file), { encoding: 'utf8' });
-    write(resolve('dist', 'css', file), css);
-  });
+  // const pattern = '**/*.less';
+  // const cwd = resolve('src');
+  // const files = glob.sync(pattern, { cwd, });
+  // files.forEach((file) => {
+  //   const css = fs.readFileSync(resolve('src', file), { encoding: 'utf8' });
+  //   write(resolve('dist', 'css', file), css);
+  // });
 }
 
 function resolve(...args) {

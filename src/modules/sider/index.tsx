@@ -1,12 +1,10 @@
 import React, { useContext } from 'react';
 import { createClassNameFunc } from '../../util/name';
 import { FlexColums, FlexColumItem } from '../../components/flex-colums';
-import { Button } from '../../components/ui';
+import { Button, Tree } from '../../components/ui';
 import { SideBar } from '../sidebar';
 import { eventHub } from '../../util/event';
-import {
-  TreeView, ExpandMoreIcon, ChevronRightIcon, FolderOpenIcon, TreeItem
-} from '../../components/ui';
+import { IconFolderOpen } from '../../components/ui';
 import { TypeWebFile, initWebFile } from '../../util/web-file';
 import { Context } from '../../context';
 
@@ -17,30 +15,33 @@ export type TypeSiderProps = {
   
 }
 
- 
-function renderTree(webFile: TypeWebFile, clickCallback: (webFile: TypeWebFile) => void) {
-  // const { store, dispatch } = useContext(Context);
-  const onClick = async () => {
-    clickCallback(webFile);
-  }
 
-  return (
-  <TreeItem
-    key={webFile.id} nodeId={webFile.id} label={webFile.name}
-    onClick={onClick}
-  >
-    {Array.isArray(webFile.children)
-      ? webFile.children.map((node: any) => {
-        return renderTree(node, clickCallback)
-      }) : null}
-  </TreeItem>)
-  
-};
-
-function RichObjectTreeView(props: { webFileList: TypeWebFile | null }) {
-  const { store, dispatch } = useContext(Context);
+export function FileTree(props: { webFileList: TypeWebFile | null }) {
   const { webFileList } = props;
-  const clickCallback = async (webFile: TypeWebFile) => {
+  const { store, dispatch } = useContext(Context);
+  function _parseData(file: TypeWebFile | null) {
+    if (file) {
+      const data: any = {
+        title: file.name,
+        key: file.id,
+        webFile: file,
+      };
+      if (Array.isArray(file.children)) {
+        data.children = [];
+        file.children.forEach((item) => {
+          data.children.push(_parseData(item))
+        })
+      }
+      return data;
+    } else {
+      return null
+    }
+  }
+  const data: any = _parseData(webFileList);
+
+  const onSelect = async (selectedKeys: any[], info: any) => {
+    console.log('info =', info.node.webFile);
+    let webFile = info?.node?.webFile as TypeWebFile;
     if (webFile.type === 'file') {
       webFile = await initWebFile(webFile);
       store.currentWebFile = webFile;
@@ -53,23 +54,11 @@ function RichObjectTreeView(props: { webFileList: TypeWebFile | null }) {
       }
     }
   }
-  return (
-    <>
-      {webFileList ? (
-        <TreeView
-          aria-label="rich object"
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpanded={['root']}
-          defaultExpandIcon={<ChevronRightIcon />}
-          sx={{ height: 110, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-        >
-          {renderTree(webFileList, clickCallback)}
-        </TreeView>
-      ) : (
-        <div>No Data</div>
-      )}
-    </>
-  );
+
+  return (<Tree
+    onSelect={onSelect}
+    treeData={[data]}
+  />)
 }
 
 export function FileMenu(props: {
@@ -80,10 +69,10 @@ export function FileMenu(props: {
   return (
     <div className={getCls('file-menu')}>
       <div className={getCls('file-menu-item')}>
-        <RichObjectTreeView webFileList={webFileList} />
+        <FileTree webFileList={webFileList} />
       </div>
       <div className={getCls('file-menu-item')}>
-        <RichObjectTreeView webFileList={tempWebFileList} />
+        <FileTree webFileList={tempWebFileList} />
       </div>
     </div>
   )
@@ -107,24 +96,24 @@ export function Sider(props: TypeSiderProps) {
         ) : (
           <div className={getCls('open-groups')} >
             <div className={getCls('empty-icon')}>
-              <FolderOpenIcon fontSize='inherit' />
+              <IconFolderOpen />
             </div>
             <div className={getCls('open-item')} >
-              <Button variant="outlined" disableRipple className={getCls('open-btn')}
+              <Button className={getCls('open-btn')}
                 onClick={() => {
                   eventHub.trigger('newFile', undefined);
                 }}
               >New File</Button>
             </div>
             <div className={getCls('open-item')} >
-              <Button variant="outlined" disableRipple className={getCls('open-btn')}
+              <Button className={getCls('open-btn')}
                 onClick={() => {
                   eventHub.trigger('openFile', undefined);
                 }}
               >Open File</Button>
             </div>
             <div className={getCls('open-item')} >
-              <Button variant="outlined" disableRipple className={getCls('open-btn')}
+              <Button className={getCls('open-btn')}
                 onClick={() => {
                   eventHub.trigger('openFolder', undefined);
                 }}

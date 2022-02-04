@@ -2,6 +2,7 @@ const path = require('path');
 const { createServer, defineConfig } = require('vite');
 const reactRefresh = require('@vitejs/plugin-react-refresh');
 const open = require('open');
+const { lessOptions } = require('./config');
 
 dev();
 
@@ -28,6 +29,11 @@ function getViteConfig() {
       host: '127.0.0.1',
     },
     plugins: [reactRefresh()],
+    css: {
+      preprocessorOptions: {
+        less: lessOptions
+      }
+    },
     esbuild: {
       include: [
         /\.ts$/,
