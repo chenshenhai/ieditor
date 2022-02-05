@@ -30,3 +30,24 @@ export function createWebImageFile(
   }
   return webFile;
 }
+
+export function getTempImageMap(tempFile: TypeWebFile | null): {[key: string]: string} {
+  const map: {[key: string]: string} = {};
+  function _parse(file: TypeWebFile) {
+    if (file.origin === 'IEditorTemp' 
+      && file.fileType?.startsWith('image/')
+      && typeof file.content === 'string'
+    ) {
+      map[file.id] = file.content;
+    }
+    if (Array.isArray(file.children)) {
+      file.children.forEach((item) => {
+        _parse(item);
+      });
+    }
+  }
+  if (tempFile) {
+    _parse(tempFile);
+  }
+  return map;
+}
