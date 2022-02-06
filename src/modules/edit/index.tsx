@@ -24,6 +24,7 @@ export type TypeLayoutProps = {
 export function Edit(props: TypeLayoutProps) {
   const ref = useRef<HTMLDivElement>(null);
   const refEditor = useRef<CodeMirror.Editor>(null);
+  const refIsModified = useRef<boolean>(false);
   const { defaultValue, onChange } = props;
   const { store, dispatch } = useContext(Context);
  
@@ -45,6 +46,10 @@ export function Edit(props: TypeLayoutProps) {
     const getEditValue = () => {
       return refEditor?.current?.getValue();
     }
+
+    const insertEditValue = (data: string) => {
+      refEditor?.current?.replaceSelection(data)
+    }
     
     if (ref && ref.current) {
       const editor: CodeMirror.Editor = CodeMirror(ref.current, {
@@ -62,24 +67,22 @@ export function Edit(props: TypeLayoutProps) {
       // @ts-ignore
       refEditor.current = editor;
       editor.on('change', () => {
+        refIsModified.current = true;
         if (typeof onChange === 'function') {
           const value = editor.getValue();
           onChange({ value })
-          // refEditor?.current?.setValue(value);
           eventHub.trigger('setPreviewValue', value);
         }
-        // editor.getValue()
       })
       eventHub.on('setEditValue', setEditValue);
       eventHub.on('getEditValue', getEditValue);
-      eventHub.on('insertEditValue', (data) => {
-        editor.replaceSelection(data)
-      })
+      eventHub.on('insertEditValue', insertEditValue);
     }
 
     return () => {
       eventHub.off('setEditValue', setEditValue);
       eventHub.off('getEditValue', getEditValue);
+      eventHub.off('insertEditValue', insertEditValue)
     }
     
   }, []);
@@ -89,6 +92,19 @@ export function Edit(props: TypeLayoutProps) {
       refEditor.current?.setValue(getFileContent(store.currentWebFile));
     }
   }, [store.currentWebFile]);
+
+  useEffect(() => {
+    const storeCurrentMarkdown = () => {
+      const values = eventHub.trigger('getEditValue', undefined);
+      if (isMarkdownFile(store.currentWebFile) && Array.isArray(values) && typeof values[0] === 'string') {
+        store.currentWebFile.content = values[0];
+      }
+    }
+    eventHub.on('storeCurrentMarkdown', storeCurrentMarkdown)
+    return () => {
+      eventHub.off('storeCurrentMarkdown', storeCurrentMarkdown)
+    }
+  }, []);
 
   return (
     <div className={getCls('container')}>

@@ -19,6 +19,7 @@ export type TypeIEditorProps = {
   width?: number;
   height?: number;
   defaultValue?: string;
+  defaultName?: string;
   fullScreen?: boolean;
 }
 
@@ -49,11 +50,11 @@ function getStyle(props: TypeIEditorProps): React.CSSProperties {
 
 function IEditor(props: TypeIEditorProps) {
 
-  const { className, defaultValue = '' } = props;
+  const { className, defaultValue, defaultName } = props;
 
   return (
     <ConfigProvider prefixCls='ieditor-ui'>
-      <Provider defaultValue={defaultValue}>
+      <Provider defaultValue={defaultValue} defaultName={defaultName} >
         <div
           className={classNames(
             createClassName(NAME), className
