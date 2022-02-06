@@ -10,6 +10,7 @@ type TypeEventArgMap  = {
   'newFile': void,
   'setPreviewValue': string,
   'getPreviewValue': void,
+  'storeCurrentMarkdown': void;
 }
 
 type TypeEventTriggerResult = {
@@ -22,6 +23,7 @@ type TypeEventTriggerResult = {
   'insertEditValue': string, 
   'setPreviewValue': string,
   'getPreviewValue': void,
+  'storeCurrentMarkdown': void;
 }
   
 interface TypeEvent {

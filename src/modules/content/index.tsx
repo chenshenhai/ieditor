@@ -8,7 +8,7 @@ export type TypeIEditorProps = {
 }
 
 export function Content(props: TypeIEditorProps) {
-  const { defaultValue = '' } = props;
+  const { defaultValue } = props;
   return (
     <SplitLayout 
       left={<Sider />}

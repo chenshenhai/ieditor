@@ -1,5 +1,7 @@
-import React, { createContext, Dispatch, useReducer } from 'react';
-import { TypeWebFile, createWebFile, createTempWebFileList, } from './util/web-file';
+import React, { createContext, Dispatch, useRef, useEffect, useReducer } from 'react';
+import { TypeWebFile, createWebFile, createTempWebFileList,  } from './util/web-file';
+import { transfromImageMapToTempFileList } from './util/web-image-file';
+import { generateEditMarkdown } from './util/markdown';
 
 type TypeStore = {
   currentWebFile: TypeWebFile,
@@ -63,13 +65,27 @@ const reducer = (prevStore: TypeStore,
 export type TypeProviderProps = {
   children?: React.ReactNode,
   defaultValue?: string;
+  defaultName?: string;
 }
 
 export const Provider = (props: TypeProviderProps) => {
-  const { children, defaultValue } = props;
-  if (typeof defaultValue === 'string' && defaultValue) {
-    initStore.currentWebFile.content = defaultValue;
+  const { children, defaultValue, defaultName } = props;
+  const refInited = useRef<boolean>(false);
+
+  if (refInited.current !== true) {
+    if (typeof defaultValue === 'string' && defaultValue) {
+      const { markdown, imageMap } = generateEditMarkdown(defaultValue);
+      const imageFileList = transfromImageMapToTempFileList(imageMap);
+      initStore.currentWebFile.content = markdown;
+      initStore.currentWebFile.name = defaultName || 'Post.md';
+      initStore.webFileList = initStore.currentWebFile;
+      imageFileList.forEach((file: TypeWebFile) => {
+        initStore.tempWebFileList?.children?.push(file);
+      });
+    }
+    refInited.current = true;
   }
+  
 
   // @ts-ignore
   const [store, dispatch] = useReducer(reducer, initStore);

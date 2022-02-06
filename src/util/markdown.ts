@@ -1,11 +1,5 @@
-import { generateUuid } from './uuid';
-
-function getExtName(dataURL: string): string {
-  const arr = dataURL.split(',');
-  // @ts-ignore
-  const extName = /^data:([^;]+?);base64/.exec(arr[0])[1] || 'image/png';
-  return extName.split('/')[1];
-}
+import { generateUuid } from './uuid'; 
+import { getImageExtName as getExtName } from './web-image-file';
 
 function parseImageSrc(md: string): string | null {
   let src: string | null = null;
@@ -33,8 +27,8 @@ export function parseMarkdownImage(
   return code;
 }
 
-export function generateMarkdownImage(md: string): {
-  md: string,
+export function generateEditMarkdown(md: string): {
+  markdown: string,
   imageMap: { [key: string]: string },
 } {
   let code: string = md;
@@ -43,15 +37,15 @@ export function generateMarkdownImage(md: string): {
     let fragment: string = match;
     let src = parseImageSrc(match);
     if (src && typeof src === 'string') {
-      const tempSrc = `${generateUuid()}.${getExtName(src)}`
-      fragment = fragment.replace(src, tempSrc);
+      const tempSrc = `${generateUuid({ easy: true })}.${getExtName(src)}`
+      fragment = fragment.replace(src, `@temp/${tempSrc}`);
       imageMap[tempSrc] = src;
     }
     return fragment;
   })
 
   return {
-    md: code,
+    markdown: code,
     imageMap
   }
 }

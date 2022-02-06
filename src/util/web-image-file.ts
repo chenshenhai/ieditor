@@ -1,6 +1,20 @@
 import { generateUuid } from './uuid';
 import { TypeWebFile } from './web-file';
 
+
+export function getImageType(dataURL: string): "image/png" | "image/jpeg" {
+  const arr = dataURL.split(',');
+  // @ts-ignore
+  const imageType = /^data:([^;]+?);base64/.exec(arr[0])[1] || 'image/png';
+  return imageType as "image/png" | "image/jpeg"
+}
+
+export function getImageExtName(dataURL: string): string {
+  const imageType = getImageType(dataURL);
+  return imageType.split('/')[1];
+}
+
+
 export function createWebImageFile(
   data: {
     fileType: 'image/png' | 'image/jpeg',
@@ -50,4 +64,22 @@ export function getTempImageMap(tempFile: TypeWebFile | null): {[key: string]: s
     _parse(tempFile);
   }
   return map;
+}
+
+export function transfromImageMapToTempFileList(
+  imageMap: {[key: string]: string}
+): TypeWebFile[] {
+  const fileList: TypeWebFile[] = [];
+  const names: string[] = Object.keys(imageMap);
+  names.forEach((name: string) => {
+    const src = imageMap[name];
+    const fileType = getImageType(src);
+    const imageFile = createWebImageFile({
+      fileType,
+      name,
+      content: src
+    }, { originPathList: ['@temp'] })
+    fileList.push(imageFile)
+  });
+  return fileList;
 }

@@ -222,5 +222,27 @@ export function isSupportedFile(webFile: TypeWebFile) {
 }
 
 
+export function updateWebFileListByTarget(
+  webList: TypeWebFile, target: TypeWebFile
+): TypeWebFile {
+  function _update(file: TypeWebFile) {
+    if (file.id === target.id) {
+      file = target;
+      return;
+    }
+    if (Array.isArray(file.children)) {
+      for (let i = 0; i < file.children.length; i ++) {
+        const child = file.children[i];
+        _update(child);
+        if (child.id === target.id) {
+          return;
+        }
+      }
+    }
+  }
+  _update(webList);
+  return webList;
+}
+
 
 
