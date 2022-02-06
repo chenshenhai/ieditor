@@ -33,9 +33,18 @@ export function Header(props: TypeHeaderProps) {
   const onClickSave = async () => {
     // const currentWebFile = dispatchCurrentWebFile({name: 'get'});
     const content: string = eventHub.trigger('getEditValue', undefined)?.[0] || '';
-    if (store?.currentWebFile?.handle && store?.currentWebFile?.handle instanceof FileSystemFileHandle) {
-      saveFile(store.currentWebFile, content)
+    // if (store?.currentWebFile?.handle && store?.currentWebFile?.handle instanceof FileSystemFileHandle) {
+    //   saveFile(store.currentWebFile, content)
+    // }
+    if (!store?.currentWebFile?.handle) {
+      store.currentWebFile.handle = await window.showSaveFilePicker({
+        types: [{
+          description: 'Markdown File',
+          accept: {'text/plain': ['.md']},
+        }],
+      });
     }
+    saveFile(store.currentWebFile, content)
   }
 
   const onClickNewFile = async () => {
