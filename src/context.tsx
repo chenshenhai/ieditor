@@ -1,4 +1,4 @@
-import React, { createContext, Dispatch, useRef, useEffect, useReducer } from 'react';
+import React, { createContext, Dispatch, useRef, useReducer } from 'react';
 import { TypeWebFile, createWebFile, createTempWebFileList,  } from './util/web-file';
 import { transfromImageMapToTempFileList } from './util/web-image-file';
 import { generateEditMarkdown } from './util/markdown';

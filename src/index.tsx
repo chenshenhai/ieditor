@@ -7,7 +7,7 @@ import { Header, headerHeight } from './modules/header';
 import { Footer, footerHeight } from './modules/footer';
 import { Provider } from './context';
 import { ConfigProvider } from './components/ui';
-// import { eventHub } from './util/event';
+import { UI_PREFIX, DEFAULT_ZINDEX } from './config';
 
 const NAME = 'wrapper';
 
@@ -39,7 +39,7 @@ function getStyle(props: TypeIEditorProps): React.CSSProperties {
         bottom: 0,
         left: 0,
         right: 0,
-        zIndex: 9999999999,
+        zIndex: DEFAULT_ZINDEX,
         width: '100%',
         height: '100%',
       }
@@ -53,7 +53,7 @@ function IEditor(props: TypeIEditorProps) {
   const { className, defaultValue, defaultName } = props;
 
   return (
-    <ConfigProvider prefixCls='ieditor-ui'>
+    <ConfigProvider prefixCls={UI_PREFIX}>
       <Provider defaultValue={defaultValue} defaultName={defaultName} >
         <div
           className={classNames(

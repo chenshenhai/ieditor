@@ -11,6 +11,8 @@ type TypeEventArgMap  = {
   'setPreviewValue': string,
   'getPreviewValue': void,
   'storeCurrentMarkdown': void;
+  'getModifyCount': void;
+  'resetModifyCount': void;
 }
 
 type TypeEventTriggerResult = {
@@ -24,6 +26,8 @@ type TypeEventTriggerResult = {
   'setPreviewValue': string,
   'getPreviewValue': void,
   'storeCurrentMarkdown': void;
+  'getModifyCount': number;
+  'resetModifyCount': void;
 }
   
 interface TypeEvent {
