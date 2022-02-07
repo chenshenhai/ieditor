@@ -24,7 +24,7 @@ export type TypeLayoutProps = {
 export function Edit(props: TypeLayoutProps) {
   const ref = useRef<HTMLDivElement>(null);
   const refEditor = useRef<CodeMirror.Editor>(null);
-  const refIsModified = useRef<boolean>(false);
+  const refModifyCount = useRef<number>(0);
   const { defaultValue, onChange } = props;
   const { store, dispatch } = useContext(Context);
  
@@ -42,6 +42,7 @@ export function Edit(props: TypeLayoutProps) {
   useEffect(() => {
     const setEditValue = (value: string) => {
       refEditor?.current?.setValue(value);
+      eventHub.trigger('resetModifyCount', undefined);
     }
     const getEditValue = () => {
       return refEditor?.current?.getValue();
@@ -49,6 +50,13 @@ export function Edit(props: TypeLayoutProps) {
 
     const insertEditValue = (data: string) => {
       refEditor?.current?.replaceSelection(data)
+    }
+
+    const getModifyCount = () => {
+      return refModifyCount.current;
+    }
+    const resetModifyCount = () => {
+      refModifyCount.current = 0;
     }
     
     if (ref && ref.current) {
@@ -67,7 +75,7 @@ export function Edit(props: TypeLayoutProps) {
       // @ts-ignore
       refEditor.current = editor;
       editor.on('change', () => {
-        refIsModified.current = true;
+        refModifyCount.current += 1;
         if (typeof onChange === 'function') {
           const value = editor.getValue();
           onChange({ value })
@@ -77,12 +85,16 @@ export function Edit(props: TypeLayoutProps) {
       eventHub.on('setEditValue', setEditValue);
       eventHub.on('getEditValue', getEditValue);
       eventHub.on('insertEditValue', insertEditValue);
+      eventHub.on('getModifyCount', getModifyCount);
+      eventHub.on('resetModifyCount', resetModifyCount);
     }
 
     return () => {
       eventHub.off('setEditValue', setEditValue);
       eventHub.off('getEditValue', getEditValue);
-      eventHub.off('insertEditValue', insertEditValue)
+      eventHub.off('insertEditValue', insertEditValue);
+      eventHub.off('getModifyCount', getModifyCount);
+      eventHub.off('resetModifyCount', resetModifyCount);
     }
     
   }, []);
@@ -100,6 +112,7 @@ export function Edit(props: TypeLayoutProps) {
         store.currentWebFile.content = values[0];
       }
     }
+    
     eventHub.on('storeCurrentMarkdown', storeCurrentMarkdown)
     return () => {
       eventHub.off('storeCurrentMarkdown', storeCurrentMarkdown)

@@ -203,7 +203,7 @@ function readFile(file: File, options: any = {}): Promise<FileReader> {
 
 export function isMarkdownFile(webFile: TypeWebFile): boolean {
   if (webFile.type === 'file' 
-    && webFile.initialized === true
+    // && webFile.initialized === true
     && webFile.name.endsWith('.md')
   ) {
     return true;

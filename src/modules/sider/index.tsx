@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { createClassNameFunc } from '../../util/name';
 import { FlexColums, FlexColumItem } from '../../components/flex-colums';
-import { Button, Tree } from '../../components/ui';
+import { Button, Tree, message } from '../../components/ui';
 import { SideBar } from '../sidebar';
 import { eventHub } from '../../util/event';
 import { IconFolderOpen } from '../../components/ui';
 import { TypeWebFile, initWebFile } from '../../util/web-file';
 import { Context } from '../../context';
+
 
 const NAME = 'sider';
 const getCls = createClassNameFunc(NAME);
@@ -42,6 +43,13 @@ export function FileTree(props: { webFileList: TypeWebFile | null }) {
   const onSelect = async (selectedKeys: any[], info: any) => {
     const { node } = info || {};
     let webFile = node?.webFile as TypeWebFile;
+
+    const modifyCount = eventHub.trigger('getModifyCount', undefined)?.[0];
+    if (modifyCount && modifyCount > 1) {
+      message.warn('Your changes will be lost if you don\'t save them.', 2)
+      return;
+    }
+
     if (webFile.type === 'file') {
       webFile = await initWebFile(webFile);
       store.currentWebFile = webFile;

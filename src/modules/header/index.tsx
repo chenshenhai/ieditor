@@ -45,6 +45,8 @@ export function Header(props: TypeHeaderProps) {
       });
     }
     saveFile(store.currentWebFile, content)
+    eventHub.trigger('storeCurrentMarkdown', undefined);
+    eventHub.trigger('resetModifyCount', undefined);
   }
 
   const onClickNewFile = async () => {
@@ -95,6 +97,7 @@ export function Header(props: TypeHeaderProps) {
   const onClickExport = async () => {
     const html = eventHub.trigger('getPreviewValue', undefined);
     console.log('html =====', html);
+    // TODO
   }
 
   useEffect(() => {
