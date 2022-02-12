@@ -140,16 +140,25 @@ This is  [Github Link](https://github.com "Hello GitHub")
 
 ### Images
 
-Add an exclamation mark (\\!), followed by alt text in brackets, and the path or URL to the image asset in parentheses. You can optionally add a title in quotation marks after the path or URL.
+Add an exclamation mark (!), followed by alt text in brackets, and the path or URL to the image asset in parentheses. You can optionally add a title in quotation marks after the path or URL.
 
 ![Hello Gitee](https://gitee.com/static/images/logo-black.svg?t=158106664)
 
 ### Escaping Characters
 
-To display a literal character that would otherwise be used to format text in a Markdown document, add a backslash (\\) in front of the character.
+To display a literal character that would otherwise be used to format text in a Markdown document, add a backslash (\) in front of the character.
 
-\\*Hello\\*
+\*Hello\*
   
+### Tables
+
+Use three or more hyphens (---) to create each column's header, and use pipes (|) to separate each column.
+
+| Header | Header |
+|  ----  |  ----  |
+|  Cell  |  Cell  |
+|  Cell  |  Cell  |
+
 
 ### Code
 
@@ -176,12 +185,12 @@ ReactDOM.render(<App />, document.querySelector('#app'))
 \`\`\`
 
 
-
 ### HTML
 
 Place the tags in the text of your Markdown-formatted file.
 
  Hello <span style="color:red; font-weight:bolder;">World</span>
+
 
 `;
 
