@@ -31,7 +31,20 @@ const value = `
 
 The file system is based on [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API)
 
+## Content
 
+### Code
+
+\`\`\`js
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+function App() {
+  return (<div>Hello World!</div>)
+}
+
+ReactDOM.render(<App />, document.querySelector('#app'))
+\`\`\`
 
 
 
