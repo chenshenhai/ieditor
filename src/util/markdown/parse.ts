@@ -1,5 +1,5 @@
-import { generateUuid } from './uuid'; 
-import { getImageExtName as getExtName } from './web-image-file';
+import { generateUuid } from '../uuid'; 
+import { getImageExtName as getExtName } from '../web-image-file';
 
 function parseImageSrc(md: string): string | null {
   let src: string | null = null;

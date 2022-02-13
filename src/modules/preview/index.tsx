@@ -4,8 +4,8 @@ import { createClassNameFunc } from '../../util/name';
 import { eventHub } from '../../util/event';
 import { Context } from '../../context'; 
 import { getTempImageMap } from '../../util/web-image-file';
-import { parseMarkdownImage } from '../../util/markdown';
-import { parseMarkdownToHtml } from './parse';
+import { parseMarkdownImage } from '../../util/markdown/parse';
+import { parseMarkdownToHtml } from '../../util/markdown/render';
 
 const NAME = 'preview';
 const getCls = createClassNameFunc(NAME);
