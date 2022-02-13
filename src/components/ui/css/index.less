@@ -6,7 +6,7 @@
 @ui-prefix: ~"@{prefix}-ui";
 
 
-.@{prefix}-wrapper {
+.@{ui-prefix}-wrapper {
 
   .@{ui-prefix}-btn {
     text-transform: none;
@@ -38,6 +38,10 @@
   
     .@{ui-prefix}-tree-node-content-wrapper {
       width: 100%;
+
+      .@{ui-prefix}-tree-iconEle {
+        vertical-align: unset;
+      }
     }
   
     .@{ui-prefix}-tree-switcher {
@@ -47,5 +51,11 @@
     }
   }
   
+} 
+
+
+.@{ui-prefix}-tree .@{ui-prefix}-tree-node-content-wrapper .@{ui-prefix}-tree-iconEle {
+  vertical-align: unset;
 }
+
 

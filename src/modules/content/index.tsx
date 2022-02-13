@@ -12,7 +12,7 @@ export function Content(props: TypeIEditorProps) {
   return (
     <SplitLayout 
       left={<Sider />}
-      leftSize={0.16}
+      leftSize={0.14}
       right={
         <Main defaultValue={defaultValue}/>
       }

@@ -78,6 +78,8 @@ export const Provider = (props: TypeProviderProps) => {
       const imageFileList = transfromImageMapToTempFileList(imageMap);
       initStore.currentWebFile.content = markdown;
       initStore.currentWebFile.name = defaultName || 'Post.md';
+      initStore.currentWebFile.pathList = [initStore.currentWebFile.name];
+      initStore.currentWebFile.id = initStore.currentWebFile.pathList.join('/');
       initStore.webFileList = initStore.currentWebFile;
       imageFileList.forEach((file: TypeWebFile) => {
         initStore.tempWebFileList?.children?.push(file);
