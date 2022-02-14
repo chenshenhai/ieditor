@@ -1,11 +1,11 @@
-import { generateUuid } from './uuid'; 
-import { getImageExtName as getExtName } from './web-image-file';
+import { generateUuid } from '../uuid'; 
+import { getImageExtName as getExtName } from '../web-image-file';
 
 function parseImageSrc(md: string): string | null {
   let src: string | null = null;
   const execArr = /!\[(.*?)\]\((.*?)\)/ig.exec(md);
   if (execArr && typeof execArr[2] === 'string') {
-    src = execArr[2];
+    src = (execArr[2] || '')?.trim();
   }
   return src;
 }
@@ -36,7 +36,7 @@ export function generateEditMarkdown(md: string): {
   code = code.replace(/!\[(.*?)\]\((.*?)\)/ig, (match: string) => {
     let fragment: string = match;
     let src = parseImageSrc(match);
-    if (src && typeof src === 'string') {
+    if (src && typeof src === 'string' && src.startsWith('data:image/')) {
       const tempSrc = `${generateUuid({ easy: true })}.${getExtName(src)}`
       fragment = fragment.replace(src, `@temp/${tempSrc}`);
       imageMap[tempSrc] = src;

@@ -6,6 +6,7 @@ import { createWebImageFile } from '../../util/web-image-file';
 import { Context } from '../../context';
 import { eventHub } from '../../util/event';
 import { pickFile, parseFileToBase64 } from '../../util/file';
+import { copyHtml } from '../../util/copy';
 
 const NAME = 'header';
 const getCls = createClassNameFunc(NAME);
@@ -96,8 +97,17 @@ export function Header(props: TypeHeaderProps) {
 
   const onClickExport = async () => {
     const html = eventHub.trigger('getPreviewValue', undefined);
-    console.log('html =====', html);
     // TODO
+    console.log('html =====', html);
+  }
+
+  const onClickCopy = async () => {
+    const html = eventHub.trigger('getPreviewValue', undefined);
+    // TODO
+    console.log('html =====', html);
+    if (Array.isArray(html) && typeof html[0] === 'string') {
+      copyHtml(html[0]);
+    }
   }
 
   useEffect(() => {
@@ -138,6 +148,7 @@ export function Header(props: TypeHeaderProps) {
       <Button className={getCls('btn')} onClick={onClickImportImage}>Import Image</Button>
       <Button className={getCls('btn')} onClick={onClickSave}>Save</Button>
       <Button className={getCls('btn')} onClick={onClickExport}>Export</Button>
+      <Button className={getCls('btn')} onClick={onClickCopy}>Copy</Button>
     </div>
   )
 }

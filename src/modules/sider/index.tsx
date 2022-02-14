@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { createClassNameFunc } from '../../util/name';
 import { FlexColums, FlexColumItem } from '../../components/flex-colums';
 import { Button, Tree, message } from '../../components/ui';
@@ -7,6 +7,8 @@ import { eventHub } from '../../util/event';
 import { IconFolderOpen } from '../../components/ui';
 import { TypeWebFile, initWebFile } from '../../util/web-file';
 import { Context } from '../../context';
+
+const { DirectoryTree } = Tree;
 
 
 const NAME = 'sider';
@@ -17,14 +19,17 @@ export type TypeSiderProps = {
 }
 
 
-export function FileTree(props: { webFileList: TypeWebFile | null }) {
-  const { webFileList } = props;
+export function FileTreeList(props: { webFileLists: TypeWebFile[] }) {
+  const { webFileLists } = props;
   const { store, dispatch } = useContext(Context);
+  const [ selectedKeys, setSelectedKeys ] = useState<string[]>([]);
+
   function _parseData(file: TypeWebFile | null) {
     if (file) {
       const data: any = {
         title: file.name,
         key: file.id,
+        isLeaf: file.type === 'file',
         webFile: file,
       };
       if (Array.isArray(file.children)) {
@@ -38,11 +43,25 @@ export function FileTree(props: { webFileList: TypeWebFile | null }) {
       return null
     }
   }
-  const data: any = _parseData(webFileList);
-
-  const onSelect = async (selectedKeys: any[], info: any) => {
+  
+  const onSelect = async (selectedKeys: any[], info: {
+    event: 'select';
+    selected: boolean;
+    node: any;
+    selectedNodes: any[];
+    nativeEvent: MouseEvent;
+}) => {
     const { node } = info || {};
     let webFile = node?.webFile as TypeWebFile;
+
+    if (webFile.id && typeof webFile.id === 'string') {
+      if (webFile.type === 'file') {
+        setSelectedKeys([webFile.id])
+      } else if (webFile.type === 'directory') {
+        // TODO
+        console.log('directory')
+      }
+    }
 
     const modifyCount = eventHub.trigger('getModifyCount', undefined)?.[0];
     if (modifyCount && modifyCount > 1) {
@@ -62,12 +81,29 @@ export function FileTree(props: { webFileList: TypeWebFile | null }) {
       }
     }
   }
-
-  return (<Tree
-    style={{width: '100%'}}
-    onSelect={onSelect}
-    treeData={[data]}
-  />)
+  
+  return (
+    <div className={getCls('file-menu')}>
+      {webFileLists.map((webFileList, key) => {
+        const data: any = _parseData(webFileList);
+        const defaultExpandedKeys = [];
+        if (webFileList && webFileList.id) {
+          defaultExpandedKeys.push(webFileList.id)
+        }
+        
+        return (<div className={getCls('file-menu-item')} key={key}>
+          <DirectoryTree
+            multiple
+            style={{width: '100%'}}
+            onSelect={onSelect}
+            treeData={[data]}
+            selectedKeys={selectedKeys}
+            defaultExpandedKeys={defaultExpandedKeys}
+          />
+        </div>)
+      })}
+    </div>
+  );
 }
 
 export function FileMenu(props: {
@@ -75,15 +111,15 @@ export function FileMenu(props: {
   tempWebFileList: TypeWebFile | null,
 }) {
   const { webFileList, tempWebFileList } = props;
+  const webFileLists: TypeWebFile[] = [];
+  if (webFileList) {
+    webFileLists.push(webFileList)
+  }
+  if (tempWebFileList) {
+    webFileLists.push(tempWebFileList)
+  }
   return (
-    <div className={getCls('file-menu')}>
-      <div className={getCls('file-menu-item')}>
-        <FileTree webFileList={webFileList} />
-      </div>
-      <div className={getCls('file-menu-item')}>
-        <FileTree webFileList={tempWebFileList} />
-      </div>
-    </div>
+    <FileTreeList webFileLists={webFileLists} />
   )
 }
 

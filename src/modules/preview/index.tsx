@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { marked, Lexer } from 'marked';
+import { Lexer } from 'marked';
 import { createClassNameFunc } from '../../util/name';
 import { eventHub } from '../../util/event';
 import { Context } from '../../context'; 
 import { getTempImageMap } from '../../util/web-image-file';
-import { parseMarkdownImage } from '../../util/markdown';
+import { parseMarkdownImage } from '../../util/markdown/parse';
+import { parseMarkdownToHtml } from '../../util/markdown/render';
 
 const NAME = 'preview';
 const getCls = createClassNameFunc(NAME);
@@ -30,7 +31,7 @@ export function Preview(props: TypeLayoutProps) {
     const setPreviewValue = (value: string) => {
       const imageMap = getTempImageMap(store.tempWebFileList);
       const md = parseMarkdownImage(value, imageMap);
-      const newHtml = marked.parse(md);
+      const newHtml = parseMarkdownToHtml(md);
       refHtml.current = newHtml;
       setHtml(newHtml);
     }

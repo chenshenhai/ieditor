@@ -7,7 +7,7 @@ import { Header, headerHeight } from './modules/header';
 import { Footer, footerHeight } from './modules/footer';
 import { Provider } from './context';
 import { ConfigProvider } from './components/ui';
-import { UI_PREFIX, DEFAULT_ZINDEX } from './config';
+import { UI_PREFIX, DEFAULT_ZINDEX, UI_WRAPPER_CLASSNAME } from './config';
 
 const NAME = 'wrapper';
 
@@ -57,7 +57,7 @@ function IEditor(props: TypeIEditorProps) {
       <Provider defaultValue={defaultValue} defaultName={defaultName} >
         <div
           className={classNames(
-            createClassName(NAME), className
+            createClassName(NAME), className, UI_WRAPPER_CLASSNAME
           )}
           style={getStyle(props)}
         >

@@ -1,7 +1,7 @@
 import React, { createContext, Dispatch, useRef, useReducer } from 'react';
 import { TypeWebFile, createWebFile, createTempWebFileList,  } from './util/web-file';
 import { transfromImageMapToTempFileList } from './util/web-image-file';
-import { generateEditMarkdown } from './util/markdown';
+import { generateEditMarkdown } from './util/markdown/parse';
 
 type TypeStore = {
   currentWebFile: TypeWebFile,
@@ -78,6 +78,8 @@ export const Provider = (props: TypeProviderProps) => {
       const imageFileList = transfromImageMapToTempFileList(imageMap);
       initStore.currentWebFile.content = markdown;
       initStore.currentWebFile.name = defaultName || 'Post.md';
+      initStore.currentWebFile.pathList = [initStore.currentWebFile.name];
+      initStore.currentWebFile.id = initStore.currentWebFile.pathList.join('/');
       initStore.webFileList = initStore.currentWebFile;
       imageFileList.forEach((file: TypeWebFile) => {
         initStore.tempWebFileList?.children?.push(file);
